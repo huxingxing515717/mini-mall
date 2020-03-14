@@ -8,14 +8,15 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>mall-investment</artifactId>
     <packaging>pom</packaging>
-    <description>招商微服务</description>
     <modules>
-        <module>mall-investment-api</module>
-        <module>mall-investment-client</module>
-        <module>mall-investment-provider</module>
+        <module>mall-basis-api</module>
+        <module>mall-basis-client</module>
+        <module>mall-basis-provider</module>
     </modules>
+
+    <artifactId>mall-basis</artifactId>
+    <description>基础微服务</description>
+
 
 </project>

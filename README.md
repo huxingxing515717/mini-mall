@@ -13,30 +13,41 @@ mini-mall
 ├── mall-registry-server:9010 -- 基于Eureka的微服务注册中心（后续考虑将其改造成Consul、Nacos）
 ├── mall-gateway-server:9015 -- 基于Zuul的网关服务（后续考虑将其改造成gateway）
 ├── mall-commons-api -- 通用api组件
+├── mall-commons-core -- 通用核心组件，提供业务相关的处理
+├── mall-basis -- 基础微服务模块
+	├── mall-investment-api -- 基础微服务api组件
+	├── mall-investment-client -- 基础微服务客户端接口组件
+	├── mall-investment-provider:9020 -- 基础微服务服务提供者组件
 ├── mall-investment -- 招商微服务模块
-	├── mall-investment-api -- 招商微服务基础组件
-	├── mall-investment-feign -- 招商微服务feing接口组件
-	├── mall-investment-provider -- 招商微服务服务提供者组件
+	├── mall-investment-api -- 招商微服务api组件
+	├── mall-investment-client -- 招商微服务客户端接口组件
+	├── mall-investment-provider:9025 -- 招商微服务服务提供者组件
 ```
 
 ## 后端技术选型
 
-|     技术     | 说明                 | 官网地址                                  |
-| :----------: | -------------------- | ----------------------------------------- |
-| Spring Boot  | 简化Spring开发的框架 | https://spring.io/projects/spring-boot    |
-| Spring Cloud | 微服务框架           | https://spring.io/projects/spring-cloud   |
-|  Swagger-UI  | 接口文档生成工具     | https://github.com/swagger-api/swagger-ui |
-|    Lombok    | 简化对象封装工具     | https://github.com/rzwitserloot/lombok    |
+|     技术     | 说明                       | 官网地址                                  |
+| :----------: | -------------------------- | ----------------------------------------- |
+| Spring Boot  | 简化Spring开发的框架       | https://spring.io/projects/spring-boot    |
+| Spring Cloud | 微服务框架                 | https://spring.io/projects/spring-cloud   |
+|  Swagger-UI  | 接口文档生成工具           | https://github.com/swagger-api/swagger-ui |
+|    Lombok    | 简化对象封装工具           | https://github.com/rzwitserloot/lombok    |
+|    Redis     | 基于键值对的存储和缓存系统 | https://redis.io/                         |
+|   RabbitMQ   | 消息中间件                 | https://www.rabbitmq.com/                 |
+|   MongoDB    | NoSQL数据库                | https://www.mongodb.com/                  |
 
 ## 环境搭建
 
 ### 开发环境
 
-| 工具  | 版本号 | 下载地址                                                     |
-| :---: | :----- | :----------------------------------------------------------- |
-|  JDK  | 1.8    | https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html |
-| MySQL | 5.6    | https://www.mysql.com                                        |
-| Nginx | 1.12.2 | http://nginx.org/en/download.html                            |
+|   工具   | 版本号 | 下载地址                                                     |
+| :------: | :----- | :----------------------------------------------------------- |
+|   JDK    | 1.8    | https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html |
+|  MySQL   | 5.6    | https://www.mysql.com                                        |
+|  Nginx   | 1.12.2 | http://nginx.org/en/download.html                            |
+| RabbitMQ | 3.7.7  | http://www.rabbitmq.com/download.html                        |
+| MongoDB  | 4.0.2  | https://www.mongodb.com/download-center                      |
+|  Redis   | 3.2.1  | https://redis.io/download                                    |
 
 ### 搭建步骤
 
