@@ -12,6 +12,7 @@
     <description>mini-mall项目父工程</description>
     <modules>
         <module>mall-registry-server</module>
+        <module>mall-gateway-server</module>
     </modules>
 
     <parent>

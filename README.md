@@ -11,6 +11,7 @@
 ```
 mini-mall
 ├── mall-registry-server:9010 -- 基于Eureka的微服务注册中心（后续考虑将其改造成Consul、Nacos）
+├── mall-gateway-server:9015 -- 基于Zuul的网关服务（后续考虑将其改造成gateway）
 ```
 
 ## 后端技术选型

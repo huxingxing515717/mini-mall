@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: mall-gateway-server
+server:
+  port: 9015
+eureka:
+  client:
+    service-url:
+      defaultZone: http://Anbang713:pwd713@localhost:9010/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 30 #30秒发送一次心跳，默认就是30秒
+    lease-expiration-duration-in-seconds: 90 #90秒不发送心跳就认为过期，默认就是90秒
