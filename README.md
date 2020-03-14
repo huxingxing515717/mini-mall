@@ -10,6 +10,7 @@
 
 ```
 mini-mall
+├── mall-registry-server:9010 -- 基于Eureka的微服务注册中心（后续考虑将其改造成Consul、Nacos）
 ```
 
 ## 后端技术选型
@@ -25,11 +26,11 @@ mini-mall
 
 ### 开发环境
 
-| 工具  | 版本号 |                           下载地址                           |
-| :---: | :----- | :----------------------------------------------------------: |
+| 工具  | 版本号 | 下载地址                                                     |
+| :---: | :----- | :----------------------------------------------------------- |
 |  JDK  | 1.8    | https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html |
-| MySQL | 5.6    |                    https://www.mysql.com                     |
-| Nginx | 1.12.2 |              http://nginx.org/en/download.html               |
+| MySQL | 5.6    | https://www.mysql.com                                        |
+| Nginx | 1.12.2 | http://nginx.org/en/download.html                            |
 
 ### 搭建步骤
 
