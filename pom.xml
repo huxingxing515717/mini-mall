@@ -13,6 +13,8 @@
     <modules>
         <module>mall-registry-server</module>
         <module>mall-gateway-server</module>
+        <module>mall-investment</module>
+        <module>mall-commons-api</module>
     </modules>
 
     <parent>

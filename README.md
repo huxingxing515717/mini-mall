@@ -12,6 +12,11 @@
 mini-mall
 ├── mall-registry-server:9010 -- 基于Eureka的微服务注册中心（后续考虑将其改造成Consul、Nacos）
 ├── mall-gateway-server:9015 -- 基于Zuul的网关服务（后续考虑将其改造成gateway）
+├── mall-commons-api -- 通用api组件
+├── mall-investment -- 招商微服务模块
+	├── mall-investment-api -- 招商微服务基础组件
+	├── mall-investment-feign -- 招商微服务feing接口组件
+	├── mall-investment-provider -- 招商微服务服务提供者组件
 ```
 
 ## 后端技术选型
