@@ -19,7 +19,7 @@ spring:
   jpa:
     database: MYSQL
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
 eureka:
   client:

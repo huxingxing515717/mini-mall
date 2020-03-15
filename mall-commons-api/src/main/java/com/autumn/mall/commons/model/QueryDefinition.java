@@ -10,10 +10,7 @@ package com.autumn.mall.commons.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 查询定义
@@ -25,9 +22,21 @@ import java.util.Map;
 @NoArgsConstructor
 public class QueryDefinition {
 
-    private int page;
-    private int pageSize;
+    private int page = 0;
+    private int pageSize = 10;
     private String keyword;
     private Map<String, Object> params = new HashMap<>();
     private List<Order> orders = new ArrayList<>();
+
+    public Map<String, Object> getParams() {
+        return this.params == null ? new HashMap<>() : this.params;
+    }
+
+    public List<Order> getOrders() {
+        if (this.orders == null || this.orders.isEmpty()) {
+            Order order = new Order("id", OrderDirection.desc);
+            return Arrays.asList(order);
+        }
+        return this.orders;
+    }
 }
