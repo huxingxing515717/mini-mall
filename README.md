@@ -30,6 +30,10 @@ mini-mall
 	├── mall-account-api -- 账务微服务api组件
 	├── mall-account-client -- 账务微服务客户端接口组件
 	├── mall-account-provider:9035 -- 账务微服务服务提供者组件
+├── mall-product -- 商品微服务模块
+	├── mall-product-api -- 商品微服务api组件
+	├── mall-product-client -- 商品微服务客户端接口组件
+	├── mall-product-provider:9040 -- 商品微服务服务提供者组件
 ```
 
 ## 后端技术选型

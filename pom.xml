@@ -19,6 +19,7 @@
         <module>mall-basis</module>
         <module>mall-sales</module>
         <module>mall-account</module>
+        <module>mall-product</module>
     </modules>
 
     <parent>
