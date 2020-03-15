@@ -11,7 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 
 /**
- * 通用响应操作码
+ * 通用响应操作码<p>
+ * 所有的操作码都以：0xxxx开头。系统异常为99999。
  *
  * @author Anbang713
  * @create 2020/3/14
@@ -20,14 +21,14 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum CommonsResultCode implements ResultCode {
 
-    SUCCESS(true, 00000, "操作成功！"),
-    FAIL(false, 00001, "操作失败！"),
-    INVALID_PARAM(false, 00002, "非法参数！"),
-    ENTITY_IS_NOT_EXIST(false, 00003, "指定唯一标识的实体不存在"),
-    SERVER_ERROR(false, 99999, "抱歉，系统繁忙，请稍后重试！");
+    SUCCESS(true, "00000", "操作成功！"),
+    FAIL(false, "00001", "操作失败！"),
+    INVALID_PARAM(false, "00002", "非法参数！"),
+    ENTITY_IS_NOT_EXIST(false, "00003", "指定唯一标识的实体不存在"),
+    SERVER_ERROR(false, "99999", "抱歉，系统繁忙，请稍后重试！");
 
     private boolean success;
-    private int code;
+    private String code;
     private String message;
 
     @Override
@@ -36,7 +37,7 @@ public enum CommonsResultCode implements ResultCode {
     }
 
     @Override
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 

@@ -21,7 +21,7 @@ import lombok.ToString;
 public class ResponseResult<T> {
 
     private boolean success;
-    private int code;
+    private String code;
     private String message;
     private T data;
 

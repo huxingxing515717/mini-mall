@@ -18,5 +18,5 @@ import java.util.List;
  */
 public interface OperationLogRepository extends MongoRepository<OperationLog, Long> {
 
-    List<OperationLog> findAllByEntityKey(String entityKey);
+    List<OperationLog> findAllByEntityKeyOrderByTimeDesc(String entityKey);
 }

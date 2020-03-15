@@ -15,9 +15,9 @@ mini-mall
 ├── mall-commons-api -- 通用api组件
 ├── mall-commons-core -- 通用核心组件，提供业务相关的处理
 ├── mall-basis -- 基础微服务模块
-	├── mall-investment-api -- 基础微服务api组件
-	├── mall-investment-client -- 基础微服务客户端接口组件
-	├── mall-investment-provider:9020 -- 基础微服务服务提供者组件
+	├── mall-basis-api -- 基础微服务api组件
+	├── mall-basis-client -- 基础微服务客户端接口组件
+	├── mall-basis-provider:9020 -- 基础微服务服务提供者组件
 ├── mall-investment -- 招商微服务模块
 	├── mall-investment-api -- 招商微服务api组件
 	├── mall-investment-client -- 招商微服务客户端接口组件

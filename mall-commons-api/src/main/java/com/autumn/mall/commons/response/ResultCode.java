@@ -27,7 +27,7 @@ public interface ResultCode {
      *
      * @return
      */
-    int getCode();
+    String getCode();
 
     /**
      * 提示信息

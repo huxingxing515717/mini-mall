@@ -10,10 +10,7 @@ package com.autumn.mall.basis.service;
 import com.autumn.mall.basis.model.OperationLog;
 import com.autumn.mall.basis.repository.OperationLogRepository;
 import com.autumn.mall.commons.exception.MallExceptionCast;
-import com.autumn.mall.commons.repository.BaseRepository;
-import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
-import com.autumn.mall.commons.service.AbstractServiceImpl;
 import com.autumn.mall.commons.utils.IdWorker;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +24,17 @@ import java.util.List;
  * @create 2020/3/14
  */
 @Service
-public class OperationLogServiceImpl extends AbstractServiceImpl<OperationLog> implements OperationLogService {
+public class OperationLogServiceImpl implements OperationLogService {
 
     @Autowired
     private OperationLogRepository operationLogRepository;
-
-    @Override
-    protected void doAfterSave(OperationLog entity) {
-        // 注意，操作日志本身在保存成功后是不需要再往mq里发送消息的。
-    }
 
     @Override
     public List<OperationLog> findAllByEntityKey(String entityKey) {
         if (StringUtils.isBlank(entityKey)) {
             MallExceptionCast.cast(CommonsResultCode.INVALID_PARAM);
         }
-        return operationLogRepository.findAllByEntityKey(entityKey);
+        return operationLogRepository.findAllByEntityKeyOrderByTimeDesc(entityKey);
     }
 
     @Override
@@ -53,21 +45,5 @@ public class OperationLogServiceImpl extends AbstractServiceImpl<OperationLog> i
         }
         entity = operationLogRepository.save(entity);
         return entity.getId();
-    }
-
-    @Override
-    public BaseRepository<OperationLog> getRepository() {
-        // 这里比较特殊
-        return null;
-    }
-
-    @Override
-    public SpecificationBuilder getSpecificationBuilder() {
-        return null;
-    }
-
-    @Override
-    public String getCacheKeyPrefix() {
-        return "mall:basis:operationlog:";
     }
 }

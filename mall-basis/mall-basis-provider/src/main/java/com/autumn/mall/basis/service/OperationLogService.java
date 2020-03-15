@@ -8,8 +8,6 @@
 package com.autumn.mall.basis.service;
 
 import com.autumn.mall.basis.model.OperationLog;
-import com.autumn.mall.commons.service.CacheService;
-import com.autumn.mall.commons.service.CrudService;
 
 import java.util.List;
 
@@ -17,7 +15,15 @@ import java.util.List;
  * @author Anbang713
  * @create 2020/3/14
  */
-public interface OperationLogService extends CrudService<OperationLog>, CacheService {
+public interface OperationLogService {
+
+    /**
+     * 新建实体，新增一条记录
+     *
+     * @param entity 实体
+     * @return 新增记录的主键值
+     */
+    String save(OperationLog entity);
 
     List<OperationLog> findAllByEntityKey(String entityKey);
 }

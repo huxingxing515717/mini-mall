@@ -13,7 +13,8 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * 招商微服务的响应操作码
+ * 招商微服务的响应操作码<p>
+ * 该微服务下所有的操作码都以：1xxxx开头。
  *
  * @author Anbang713
  * @create 2020/3/14
@@ -23,9 +24,10 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum InvestResultCode implements ResultCode {
 
-    ENTITY_IS_STOPPED(false, 10001, "当前实体为已停用状态，禁止操作！");
+    CODE_IS_EXISTS(false, "10001", "代码已存在，禁止操作！"),
+    CODE_IS_NOT_ALLOW_MODIFY(false, "10002", "代码不允许修改！");
 
     private boolean success;
-    private int code;
+    private String code;
     private String message;
 }

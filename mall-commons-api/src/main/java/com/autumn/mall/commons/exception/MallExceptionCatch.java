@@ -7,14 +7,22 @@
  */
 package com.autumn.mall.commons.exception;
 
+import cn.hutool.json.JSONUtil;
 import com.autumn.mall.commons.response.CommonsResultCode;
+import com.autumn.mall.commons.response.CustomResultCode;
 import com.autumn.mall.commons.response.ResponseResult;
 import com.autumn.mall.commons.response.ResultCode;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 统一异常捕获类
@@ -56,7 +64,7 @@ public class MallExceptionCatch {
     public ResponseResult exception(Exception exception) {
         exception.printStackTrace();
         //记录日志
-        log.error("catch exception:{}", exception.getMessage());
+        log.error("捕获到异常信息：{}", exception.getMessage());
         if (EXCEPTIONS == null) {
             EXCEPTIONS = builder.build();//EXCEPTIONS构建成功
         }
@@ -64,10 +72,23 @@ public class MallExceptionCatch {
         ResultCode resultCode = EXCEPTIONS.get(exception.getClass());
         if (resultCode != null) {
             return new ResponseResult(resultCode);
+        } else if (exception instanceof MethodArgumentNotValidException) {
+            String errors = getErrorMsgIfMethodArgumentNotValidException((MethodArgumentNotValidException) exception);
+            return new ResponseResult(new CustomResultCode(false, "-1", errors));
         } else {
             //返回99999异常
             return new ResponseResult(CommonsResultCode.SERVER_ERROR);
         }
+    }
+
+    private String getErrorMsgIfMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        Iterator iterator = exception.getBindingResult().getAllErrors().iterator();
+        List<String> errors = new ArrayList<>();
+        while (iterator.hasNext()) {
+            ObjectError error = (ObjectError) iterator.next();
+            errors.add(error.getDefaultMessage());
+        }
+        return JSONUtil.toJsonStr(errors);
     }
 
     static {
