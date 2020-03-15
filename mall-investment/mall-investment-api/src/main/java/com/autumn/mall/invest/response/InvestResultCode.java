@@ -26,7 +26,8 @@ public enum InvestResultCode implements ResultCode {
 
     CODE_IS_EXISTS(false, "10001", "代码已存在，禁止操作！"),
     CODE_IS_NOT_ALLOW_MODIFY(false, "10002", "代码不允许修改！"),
-    STORE_IS_NOT_ALLOW_MODIFY(false, "10003", "项目不允许修改！");
+    STORE_IS_NOT_ALLOW_MODIFY(false, "10003", "项目不允许修改！"),
+    BUILDING_IS_NOT_ALLOW_MODIFY(false, "10004", "楼宇不允许修改！");
 
     private boolean success;
     private String code;
