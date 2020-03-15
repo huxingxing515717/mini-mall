@@ -13,7 +13,7 @@ import com.autumn.mall.commons.service.AbstractServiceImpl;
 import com.autumn.mall.invest.model.Tenant;
 import com.autumn.mall.invest.repository.TenantRepository;
 import com.autumn.mall.invest.response.InvestResultCode;
-import com.autumn.mall.invest.specification.BrandSpecificationBuilder;
+import com.autumn.mall.invest.specification.TenantSpecificationBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class TenantServiceImpl extends AbstractServiceImpl<Tenant> implements Te
     @Autowired
     private TenantRepository tenantRepository;
     @Autowired
-    private BrandSpecificationBuilder specificationBuilder;
+    private TenantSpecificationBuilder specificationBuilder;
 
     @Override
     protected void doBeforeSave(Tenant entity) {

@@ -1,0 +1,27 @@
+server:
+  port: 9030
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+  application:
+    name: mall-sales-provider
+  redis:
+    host: localhost
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3380/mall_sales?characterEncoding=utf-8
+    username: root
+    password: Anbang713
+  jpa:
+    database: MYSQL
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://Anbang713:pwd713@localhost:9010/eureka/

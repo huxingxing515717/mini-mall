@@ -22,6 +22,10 @@ mini-mall
 	├── mall-investment-api -- 招商微服务api组件
 	├── mall-investment-client -- 招商微服务客户端接口组件
 	├── mall-investment-provider:9025 -- 招商微服务服务提供者组件
+├── mall-sales -- 销售微服务模块
+	├── mall-sales-api -- 销售微服务api组件
+	├── mall-sales-client -- 销售微服务客户端接口组件
+	├── mall-sales-provider:9030 -- 销售微服务服务提供者组件
 ```
 
 ## 后端技术选型
