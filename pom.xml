@@ -18,6 +18,7 @@
         <module>mall-commons-core</module>
         <module>mall-basis</module>
         <module>mall-sales</module>
+        <module>mall-account</module>
     </modules>
 
     <parent>

@@ -87,7 +87,7 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
 
         QueryResult<T> result = new QueryResult<>();
         result.setTotal(page.getTotalElements());
-        result.getList().addAll(page.getContent());
+        result.getRecords().addAll(page.getContent());
         return result;
     }
 

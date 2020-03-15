@@ -30,7 +30,7 @@ public class QueryResult<T> {
     /**
      * 数据列表
      */
-    private List<T> list = new ArrayList<>();
+    private List<T> records = new ArrayList<>();
     /**
      * 数据总数
      */
