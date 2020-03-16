@@ -23,9 +23,9 @@ public interface ContractService extends CrudService<Contract>, CacheService {
     /**
      * 批量生效
      *
-     * @param contractIds
+     * @param ids
      * @return 返回生效失败的合同错误原因
      */
-    Map<String, String> doEffect(List<String> contractIds);
+    Map<String, String> doEffect(List<String> ids);
 
 }

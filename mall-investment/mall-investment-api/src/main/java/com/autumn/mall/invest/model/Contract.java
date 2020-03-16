@@ -98,6 +98,10 @@ public class Contract implements IsEntity {
     private String subjectId;
 
     @NotNull
+    @ApiModelProperty(value = "税率", dataType = "BigDecimal")
+    private BigDecimal taxRate;
+
+    @NotNull
     @ApiModelProperty(value = "销售提成率", dataType = "BigDecimal")
     private BigDecimal salesRate;
 

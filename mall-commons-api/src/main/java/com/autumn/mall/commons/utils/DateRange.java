@@ -7,6 +7,8 @@
  */
 package com.autumn.mall.commons.utils;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import com.autumn.mall.commons.api.HasDateInterval;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -211,5 +213,24 @@ public class DateRange implements HasDateInterval {
             return null;
         else
             return DateUtils.truncate(date, Calendar.MILLISECOND);
+    }
+
+    /**
+     * 指定日期显示格式，返回友好的时间段区间文本
+     */
+    public String toFriendlyStr(String format) {
+        StringBuffer sb = new StringBuffer();
+        if (getBeginDate() != null) {
+            sb.append(DateUtil.format(getBeginDate(), format));
+        }
+        sb.append("～");
+        if (getEndDate() != null) {
+            sb.append(DateUtil.format(getEndDate(), format));
+        }
+        return sb.toString();
+    }
+
+    public String toString() {
+        return toFriendlyStr(DatePattern.NORM_DATE_PATTERN);
     }
 }
