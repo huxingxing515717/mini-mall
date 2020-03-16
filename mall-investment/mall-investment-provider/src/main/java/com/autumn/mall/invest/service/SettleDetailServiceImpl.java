@@ -12,6 +12,7 @@ import com.autumn.mall.invest.repository.SettleDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -27,7 +28,10 @@ public class SettleDetailServiceImpl implements SettleDetailService {
     private SettleDetailRepository settleDetailRepository;
 
     @Override
-    public void saveAll(List<SettleDetail> details) {
+    @Transactional
+    public void saveAll(String contractId, List<SettleDetail> details) {
+        // 删掉再重新保存
+        settleDetailRepository.deleteByContractId(contractId);
         settleDetailRepository.saveAll(details);
     }
 

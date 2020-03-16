@@ -75,7 +75,7 @@ public class ContractServiceImpl extends AbstractServiceImpl<Contract> implement
                 contract.setBizState(BizState.effect);
                 contractRepository.save(contract);
                 // 生成结算明细
-                settleDetailService.saveAll(SettleDetailCalculator.calculate(contract));
+                settleDetailService.saveAll(contract.getId(), SettleDetailCalculator.calculate(contract));
             } catch (Exception e) {
                 log.error("合同:" + contract.getId() + "生效过程报错：{}", e);
                 errorMap.put(contract.getId(), e.getMessage());
