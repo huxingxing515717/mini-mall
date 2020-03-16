@@ -19,4 +19,9 @@ public interface Exchanges {
      * 从mall-commons-core工程发出的mq交换器名称
      */
     String MALL_COMMONS_EXCHANGE = "mini-mall.commons.core";
+
+    /**
+     * 商品微服务
+     */
+    String MALL_PRODUCT_PROVIDER_EXCHANGE = "mini-mall.product.provider";
 }

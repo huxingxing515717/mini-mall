@@ -12,4 +12,9 @@ public interface RoutingKeys {
      * 实体被创建或者被更新，通常用于记录操作日志
      */
     String ENTITY_UPDATED = "entityUpdated";
+
+    /**
+     * 更新商品库存
+     */
+    String STOCK_UPDATED = "stockUpdated";
 }

@@ -30,7 +30,7 @@ import java.util.Date;
 public class OperationLog implements IsEntity {
 
     @MongoId
-    @ApiModelProperty(value = "唯一标识", dataType = "Long")
+    @ApiModelProperty(value = "唯一标识", dataType = "String")
     private String id;
 
     @NotBlank

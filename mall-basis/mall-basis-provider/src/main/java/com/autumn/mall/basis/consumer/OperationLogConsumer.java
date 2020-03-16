@@ -39,7 +39,7 @@ public class OperationLogConsumer {
     @Autowired
     private OperationLogService operationLogService;
 
-    private static final String QUERY_NAME = "operationlog.queue";
+    private static final String QUERY_NAME = "mini-mall.basis.operationlog.queue";
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = QUERY_NAME, durable = "true"),

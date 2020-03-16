@@ -33,7 +33,7 @@ import java.util.List;
 public class PaymentType implements IsEntity {
 
     @Id
-    @ApiModelProperty(value = "唯一标识", dataType = "Long")
+    @ApiModelProperty(value = "唯一标识", dataType = "String")
     private String id;
 
     @NotBlank
