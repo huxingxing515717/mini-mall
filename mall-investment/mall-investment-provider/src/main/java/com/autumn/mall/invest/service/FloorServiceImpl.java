@@ -38,17 +38,17 @@ public class FloorServiceImpl extends AbstractServiceImpl<Floor> implements Floo
     protected void doBeforeSave(Floor entity) {
         super.doBeforeSave(entity);
         // 同一项目、同一楼宇下，不允许存在代码重复的楼宇
-        Optional<Floor> optional = floorRepository.findByStoreUuidAndBuildingUuidAndCode(entity.getStoreUuid(), entity.getBuildingUuid(), entity.getCode());
+        Optional<Floor> optional = floorRepository.findByStoreIdAndBuildingIdAndCode(entity.getStoreId(), entity.getBuildingId(), entity.getCode());
         if (optional.isPresent() && (entity.getId() == null || entity.getId().equals(optional.get().getId()) == false)) {
             MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
         }
         // 如果是编辑，则项目、楼宇和代码都不允许修改
         if (StringUtils.isNotBlank(entity.getId())) {
             Floor floor = findById(entity.getId());
-            if (floor.getStoreUuid().equals(entity.getStoreUuid()) == false) {
+            if (floor.getStoreId().equals(entity.getStoreId()) == false) {
                 MallExceptionCast.cast(InvestResultCode.STORE_IS_NOT_ALLOW_MODIFY);
             }
-            if (floor.getBuildingUuid().equals(entity.getBuildingUuid()) == false) {
+            if (floor.getBuildingId().equals(entity.getBuildingId()) == false) {
                 MallExceptionCast.cast(InvestResultCode.BUILDING_IS_NOT_ALLOW_MODIFY);
             }
             if (floor.getCode().equals(entity.getCode()) == false) {

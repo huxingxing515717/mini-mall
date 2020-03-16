@@ -59,8 +59,8 @@ public class FloorController implements FloorApi {
     public ResponseResult<Floor> findById(@PathVariable("id") String id) {
         Floor entity = floorService.findById(id);
         entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(floorService.getCacheKeyPrefix() + id).getData());
-        entity.setStore(storeService.findById(entity.getStoreUuid()));
-        entity.setBuilding(buildingService.findById(entity.getBuildingUuid()));
+        entity.setStore(storeService.findById(entity.getStoreId()));
+        entity.setBuilding(buildingService.findById(entity.getBuildingId()));
         return new ResponseResult(CommonsResultCode.SUCCESS, entity);
     }
 

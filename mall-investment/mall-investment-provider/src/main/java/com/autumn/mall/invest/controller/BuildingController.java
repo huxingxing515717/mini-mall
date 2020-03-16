@@ -52,11 +52,11 @@ public class BuildingController implements BuildingApi {
     @Override
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "id", value = "楼宇id", required = true, dataType = "Long", paramType = "path")
+    @ApiImplicitParam(name = "id", value = "楼宇id", required = true, dataType = "String", paramType = "path")
     public ResponseResult<Building> findById(@PathVariable("id") String id) {
         Building entity = buildingService.findById(id);
         entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(buildingService.getCacheKeyPrefix() + id).getData());
-        entity.setStore(storeService.findById(entity.getStoreUuid()));
+        entity.setStore(storeService.findById(entity.getStoreId()));
         return new ResponseResult(CommonsResultCode.SUCCESS, entity);
     }
 

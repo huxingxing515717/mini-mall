@@ -62,9 +62,9 @@ public class PositionController implements PositionApi {
     public ResponseResult<Position> findById(@PathVariable("id") String id) {
         Position entity = positionService.findById(id);
         entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(positionService.getCacheKeyPrefix() + id).getData());
-        entity.setStore(storeService.findById(entity.getStoreUuid()));
-        entity.setBuilding(buildingService.findById(entity.getBuildingUuid()));
-        entity.setFloor(floorService.findById(entity.getFloorUuid()));
+        entity.setStore(storeService.findById(entity.getStoreId()));
+        entity.setBuilding(buildingService.findById(entity.getBuildingId()));
+        entity.setFloor(floorService.findById(entity.getFloorId()));
         return new ResponseResult(CommonsResultCode.SUCCESS, entity);
     }
 

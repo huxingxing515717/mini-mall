@@ -15,7 +15,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author Anbang713
  * @create 2020/3/15
  */
-@FeignClient(name = "mall-basis-provider", path = "/stock")
+@FeignClient(name = "mall-basis-provider", path = "/stock", contextId = "mall-basis-StockClient")
 public interface StockClient extends StockApi {
 
 }

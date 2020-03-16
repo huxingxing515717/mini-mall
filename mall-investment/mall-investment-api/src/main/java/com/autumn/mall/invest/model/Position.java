@@ -37,16 +37,16 @@ public class Position implements IsEntity {
     private String id;
 
     @NotBlank
-    @ApiModelProperty(value = "项目uuid", dataType = "String")
-    private String storeUuid;
+    @ApiModelProperty(value = "项目id", dataType = "String")
+    private String storeId;
 
     @NotBlank
-    @ApiModelProperty(value = "楼宇uuid", dataType = "String")
-    private String buildingUuid;
+    @ApiModelProperty(value = "楼宇id", dataType = "String")
+    private String buildingId;
 
     @NotBlank
-    @ApiModelProperty(value = "楼层uuid", dataType = "String")
-    private String floorUuid;
+    @ApiModelProperty(value = "楼层id", dataType = "String")
+    private String floorId;
 
     @NotBlank
     @Length(max = 32, message = "代码最大长度不超过32")

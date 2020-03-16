@@ -37,8 +37,8 @@ public class Building implements IsEntity {
     private String id;
 
     @NotBlank
-    @ApiModelProperty(value = "项目uuid", dataType = "String")
-    private String storeUuid;
+    @ApiModelProperty(value = "项目id", dataType = "String")
+    private String storeId;
 
     @NotBlank
     @Length(max = 32, message = "代码最大长度不超过32")

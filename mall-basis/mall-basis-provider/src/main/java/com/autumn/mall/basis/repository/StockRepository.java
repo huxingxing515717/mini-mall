@@ -43,11 +43,4 @@ public interface StockRepository extends Repository<Stock, String> {
      */
     Stock findByEntityKeyAndWarehouse(String entityKey, String warehouse);
 
-    /**
-     * 根据实体标识批量查询库存信息
-     *
-     * @param entityKeys
-     * @return
-     */
-    List<Stock> findAllByEntityKeys(List<String> entityKeys);
 }

@@ -38,14 +38,14 @@ public class BuildingServiceImpl extends AbstractServiceImpl<Building> implement
     protected void doBeforeSave(Building entity) {
         super.doBeforeSave(entity);
         // 同一项目下，不允许存在代码重复的楼宇
-        Optional<Building> optional = buildingRepository.findByStoreUuidAndCode(entity.getStoreUuid(), entity.getCode());
+        Optional<Building> optional = buildingRepository.findByStoreIdAndCode(entity.getStoreId(), entity.getCode());
         if (optional.isPresent() && (entity.getId() == null || entity.getId().equals(optional.get().getId()) == false)) {
             MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
         }
         // 如果是编辑，则项目和代码都不允许修改
         if (StringUtils.isNotBlank(entity.getId())) {
             Building building = findById(entity.getId());
-            if (building.getStoreUuid().equals(entity.getStoreUuid()) == false) {
+            if (building.getStoreId().equals(entity.getStoreId()) == false) {
                 MallExceptionCast.cast(InvestResultCode.STORE_IS_NOT_ALLOW_MODIFY);
             }
             if (building.getCode().equals(entity.getCode()) == false) {

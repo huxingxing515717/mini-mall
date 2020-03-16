@@ -16,7 +16,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author Anbang713
  * @create 2020/3/14
  */
-@FeignClient(name = "mall-basis-provider", path = "/operationlog", fallback = OperationLogFallback.class)
+@FeignClient(name = "mall-basis-provider", path = "/operationlog", contextId = "mall-basis-OperationLogClient", fallback = OperationLogFallback.class)
 public interface OperationLogClient extends OperationLogApi {
 
 }

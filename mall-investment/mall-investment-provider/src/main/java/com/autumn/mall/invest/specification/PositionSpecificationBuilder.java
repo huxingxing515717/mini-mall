@@ -32,12 +32,12 @@ public class PositionSpecificationBuilder implements SpecificationBuilder {
             return cb.or(cb.like(root.get("code"), pattern), cb.like(root.get("name"), pattern));
         } else if ("entityState".equals(property)) {
             return cb.equal(root.get("entityState"), EntityState.valueOf(value.toString()));
-        } else if ("storeUuid".equals(property)) {
-            return cb.equal(root.get("storeUuid"), value);
-        } else if ("buildingUuid".equals(property)) {
-            return cb.equal(root.get("buildingUuid"), value);
-        } else if ("floorUuid".equals(property)) {
-            return cb.equal(root.get("floorUuid"), value);
+        } else if ("storeId".equals(property)) {
+            return cb.equal(root.get("storeId"), value);
+        } else if ("buildingId".equals(property)) {
+            return cb.equal(root.get("buildingId"), value);
+        } else if ("floorId".equals(property)) {
+            return cb.equal(root.get("floorId"), value);
         }
         return null;
     }

@@ -23,7 +23,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableSwagger2
-@EnableFeignClients(basePackages = {"com.autumn.mall.basis.client"})
+@EnableFeignClients(basePackages = {"com.autumn.mall.basis.client", "com.autumn.mall.account.client"})
 @ComponentScan(basePackages = {"com.autumn.mall.commons", "com.autumn.mall.invest"})
 public class InvestProviderApplication {
 
