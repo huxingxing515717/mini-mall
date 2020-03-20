@@ -36,7 +36,7 @@ public class GoodsInbound implements IsEntity {
 
     @Id
     @ApiModelProperty(value = "唯一标识", dataType = "String")
-    private String id;
+    private String uuid;
 
     @ApiModelProperty(value = "单号", dataType = "String")
     private String billNumber;

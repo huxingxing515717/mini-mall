@@ -7,7 +7,7 @@
  */
 package com.autumn.mall.invest.specification;
 
-import com.autumn.mall.commons.model.EntityState;
+import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +15,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Anbang713
@@ -25,13 +27,19 @@ public class StoreSpecificationBuilder implements SpecificationBuilder {
 
     @Override
     public Predicate build(Root root, CriteriaQuery query, CriteriaBuilder cb, String property, Object value) {
-        if (value == null)
+        if (value == null || (value instanceof List && ((List) value).isEmpty()))
             return null;
         if ("keyword".equals(property)) {
             String pattern = "%" + value + "%";
             return cb.or(cb.like(root.get("code"), pattern), cb.like(root.get("name"), pattern));
-        } else if ("entityState".equals(property)) {
-            return cb.equal(root.get("entityState"), EntityState.valueOf(value.toString()));
+        } else if ("usingState".equals(property)) {
+            if (value instanceof List) {
+                List<Predicate> predicates = new ArrayList<>();
+                ((List) value).stream().forEach(val -> predicates.add(cb.equal(root.get("usingState"), UsingState.valueOf(val.toString()))));
+                return cb.or(predicates.toArray(new Predicate[]{}));
+            } else {
+                return cb.equal(root.get("usingState"), UsingState.valueOf(value.toString()));
+            }
         }
         return null;
     }

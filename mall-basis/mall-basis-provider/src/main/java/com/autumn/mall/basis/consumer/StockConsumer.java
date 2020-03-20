@@ -86,7 +86,7 @@ public class StockConsumer {
             if (tempQty.compareTo(BigDecimal.ZERO) < 0) {
                 // TODO 此时库存数量不够减了，抛出异常
             }
-            stock.setId(stockInfo.getId());
+            stock.setUuid(stockInfo.getUuid());
             stock.setQuantity(tempQty);
         }
         boolean saved = stockService.save(stock);

@@ -8,7 +8,6 @@
 package com.autumn.mall.invest.model;
 
 import com.autumn.mall.account.model.Subject;
-import com.autumn.mall.basis.model.OperationLog;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.model.IsEntity;
 import io.swagger.annotations.ApiModel;
@@ -20,9 +19,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 合同
@@ -38,7 +35,7 @@ public class Contract implements IsEntity {
 
     @Id
     @ApiModelProperty(value = "唯一标识", dataType = "String")
-    private String id;
+    private String uuid;
 
     @NotBlank
     @ApiModelProperty(value = "合同号，客户端的业务主键", dataType = "String", readOnly = true)
@@ -126,6 +123,4 @@ public class Contract implements IsEntity {
     private BizType bizType;
     @Transient
     private Subject subject;
-    @Transient
-    private List<OperationLog> operationLogs = new ArrayList<>();
 }

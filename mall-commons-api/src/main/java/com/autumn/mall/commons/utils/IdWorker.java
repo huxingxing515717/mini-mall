@@ -87,7 +87,7 @@ public class IdWorker {
     public synchronized String nextId() {
         long timestamp = timeGen();
         if (timestamp < lastTimestamp) {
-            throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
+            throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate uuid for %d milliseconds", lastTimestamp - timestamp));
         }
 
         if (lastTimestamp == timestamp) {

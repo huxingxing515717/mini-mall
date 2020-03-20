@@ -47,7 +47,7 @@ public class SubjectController implements SubjectApi {
     @Override
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "id", value = "科目id", required = true, dataType = "Long", paramType = "path")
+    @ApiImplicitParam(name = "uuid", value = "科目id", required = true, dataType = "Long", paramType = "path")
     public ResponseResult<Subject> findById(@PathVariable("id") String id) {
         Subject entity = subjectService.findById(id);
         entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(subjectService.getCacheKeyPrefix() + id).getData());

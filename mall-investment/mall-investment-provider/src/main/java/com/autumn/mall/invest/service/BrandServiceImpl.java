@@ -39,12 +39,12 @@ public class BrandServiceImpl extends AbstractServiceImpl<Brand> implements Bran
         super.doBeforeSave(entity);
         // 不允许存在代码重复的项目
         Optional<Brand> optional = brandRepository.findByCode(entity.getCode());
-        if (optional.isPresent() && (entity.getId() == null || entity.getId().equals(optional.get().getId()) == false)) {
+        if (optional.isPresent() && (entity.getUuid() == null || entity.getUuid().equals(optional.get().getUuid()) == false)) {
             MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
         }
         // 如果是编辑，则代码不允许修改
-        if (StringUtils.isNotBlank(entity.getId())) {
-            Brand store = findById(entity.getId());
+        if (StringUtils.isNotBlank(entity.getUuid())) {
+            Brand store = findById(entity.getUuid());
             if (store.getCode().equals(entity.getCode()) == false) {
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_NOT_ALLOW_MODIFY);
             }

@@ -24,7 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 public class StockInfo {
 
-    private String id;
+    private String uuid;
 
     /**
      * 实体标识

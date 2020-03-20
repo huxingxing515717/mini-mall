@@ -53,7 +53,7 @@ public class ContractServiceImpl extends AbstractServiceImpl<Contract> implement
         super.doBeforeSave(entity);
         validBeforeSave(entity);
         // 新建时，生成合同号
-        if (StringUtils.isBlank(entity.getId())) {
+        if (StringUtils.isBlank(entity.getUuid())) {
             entity.setSerialNumber(new IdWorker().nextId());
         }
     }
@@ -67,7 +67,7 @@ public class ContractServiceImpl extends AbstractServiceImpl<Contract> implement
         while (iterator.hasNext()) {
             Contract contract = iterator.next();
             if (BizState.effect.equals(contract.getBizState())) {
-                errorMap.put(contract.getId(), "合同已经生效，禁止重复操作！");
+                errorMap.put(contract.getUuid(), "合同已经生效，禁止重复操作！");
                 continue;
             }
             try {
@@ -75,10 +75,10 @@ public class ContractServiceImpl extends AbstractServiceImpl<Contract> implement
                 contract.setBizState(BizState.effect);
                 contractRepository.save(contract);
                 // 生成结算明细
-                settleDetailService.saveAll(contract.getId(), SettleDetailCalculator.calculate(contract));
+                settleDetailService.saveAll(contract.getUuid(), SettleDetailCalculator.calculate(contract));
             } catch (Exception e) {
-                log.error("合同:" + contract.getId() + "生效过程报错：{}", e);
-                errorMap.put(contract.getId(), e.getMessage());
+                log.error("合同:" + contract.getUuid() + "生效过程报错：{}", e);
+                errorMap.put(contract.getUuid(), e.getMessage());
             }
         }
 

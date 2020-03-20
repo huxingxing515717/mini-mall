@@ -34,7 +34,7 @@ public class SettleDetail implements IsEntity {
 
     @Id
     @ApiModelProperty(value = "唯一标识", dataType = "String")
-    private String id;
+    private String uuid;
 
     @NotBlank
     @ApiModelProperty(value = "合同id", dataType = "String")

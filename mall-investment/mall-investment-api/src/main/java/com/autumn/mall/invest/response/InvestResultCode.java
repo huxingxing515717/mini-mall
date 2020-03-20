@@ -29,7 +29,9 @@ public enum InvestResultCode implements ResultCode {
     STORE_IS_NOT_ALLOW_MODIFY(false, "10003", "项目不允许修改！"),
     BUILDING_IS_NOT_ALLOW_MODIFY(false, "10004", "楼宇不允许修改！"),
     FLOOR_IS_NOT_ALLOW_MODIFY(false, "10005", "楼层不允许修改！"),
-    POSITION_IS_REPEAT(false, "10006", "同一铺位，合同期不允许交叉！");
+    POSITION_IS_REPEAT(false, "10006", "同一铺位，合同期不允许交叉！"),
+    ENTITY_IS_DISABLED(false, "10007", "已停用状态的资料，不允许修改！"),
+    ENTITY_IS_EQUALS_TARGET_STATE(false, "10008", "资料已经是目标状态，禁止重复操作！");
 
     private boolean success;
     private String code;

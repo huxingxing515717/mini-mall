@@ -51,11 +51,12 @@ public class OperationLogConsumer {
         log.info("接收到来自：" + Exchanges.MALL_COMMONS_EXCHANGE + "的操作日志更新消息，消息体：" + jsonObject.toString());
 
         OperationLog operationLog = new OperationLog();
-        operationLog.setId(new IdWorker().nextId());
+        operationLog.setUuid(new IdWorker().nextId());
         operationLog.setEntityKey(jsonObject.getStr("entityKey"));
-        operationLog.setTime(DateUtil.parse(jsonObject.getStr("time")));
+        operationLog.setTime(jsonObject.getStr("time", DateUtil.now()));
         operationLog.setOperator(JSONUtil.toBean(jsonObject.getStr("operator"), Admin.class));
-        operationLog.setReason(jsonObject.getStr("reason", null));
+        operationLog.setActionName(jsonObject.getStr("actionName"));
+        operationLog.setReason(jsonObject.getStr("reason"));
         operationLogService.save(operationLog);
     }
 

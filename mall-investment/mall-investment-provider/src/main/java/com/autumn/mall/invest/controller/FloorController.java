@@ -7,7 +7,6 @@
  */
 package com.autumn.mall.invest.controller;
 
-import com.autumn.mall.basis.client.OperationLogClient;
 import com.autumn.mall.commons.model.QueryDefinition;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.response.QueryResult;
@@ -42,8 +41,6 @@ public class FloorController implements FloorApi {
     private BuildingService buildingService;
     @Autowired
     private StoreService storeService;
-    @Autowired
-    private OperationLogClient operationLogClient;
 
     @PostMapping
     @ApiOperation(value = "新增或编辑楼层", httpMethod = "POST")
@@ -55,10 +52,9 @@ public class FloorController implements FloorApi {
     @Override
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "id", value = "楼层id", required = true, dataType = "Long", paramType = "path")
+    @ApiImplicitParam(name = "uuid", value = "楼层id", required = true, dataType = "Long", paramType = "path")
     public ResponseResult<Floor> findById(@PathVariable("id") String id) {
         Floor entity = floorService.findById(id);
-        entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(floorService.getCacheKeyPrefix() + id).getData());
         entity.setStore(storeService.findById(entity.getStoreId()));
         entity.setBuilding(buildingService.findById(entity.getBuildingId()));
         return new ResponseResult(CommonsResultCode.SUCCESS, entity);

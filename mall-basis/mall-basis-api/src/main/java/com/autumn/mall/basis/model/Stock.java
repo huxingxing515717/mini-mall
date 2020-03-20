@@ -34,7 +34,7 @@ public class Stock implements IsEntity {
 
     @Id
     @ApiModelProperty(value = "唯一标识", dataType = "String")
-    private String id;
+    private String uuid;
 
     @NotBlank
     @ApiModelProperty(value = "实体标识", dataType = "String")

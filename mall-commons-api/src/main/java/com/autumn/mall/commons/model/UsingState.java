@@ -9,8 +9,8 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum EntityState {
-    using("使用中"), stopped("已停用");
+public enum UsingState {
+    using("使用中"), disabled("已停用");
 
     private String caption;
 }

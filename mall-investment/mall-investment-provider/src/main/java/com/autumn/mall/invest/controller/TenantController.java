@@ -7,7 +7,6 @@
  */
 package com.autumn.mall.invest.controller;
 
-import com.autumn.mall.basis.client.OperationLogClient;
 import com.autumn.mall.commons.model.QueryDefinition;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.response.QueryResult;
@@ -34,8 +33,6 @@ public class TenantController implements TenantApi {
 
     @Autowired
     private TenantService tenantService;
-    @Autowired
-    private OperationLogClient operationLogClient;
 
     @PostMapping
     @ApiOperation(value = "新增或编辑商戶", httpMethod = "POST")
@@ -47,11 +44,9 @@ public class TenantController implements TenantApi {
     @Override
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "id", value = "商戶id", required = true, dataType = "Long", paramType = "path")
+    @ApiImplicitParam(name = "uuid", value = "商戶id", required = true, dataType = "Long", paramType = "path")
     public ResponseResult<Tenant> findById(@PathVariable("id") String id) {
-        Tenant entity = tenantService.findById(id);
-        entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(tenantService.getCacheKeyPrefix() + id).getData());
-        return new ResponseResult(CommonsResultCode.SUCCESS, entity);
+        return new ResponseResult(CommonsResultCode.SUCCESS, tenantService.findById(id));
     }
 
     @Override

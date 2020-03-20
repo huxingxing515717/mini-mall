@@ -37,12 +37,12 @@ public class GoodsServiceImpl extends AbstractServiceImpl<Goods> implements Good
         super.doBeforeSave(entity);
         // 不允许存在代码重复的科目
         Optional<Goods> optional = goodsRepository.findByCode(entity.getCode());
-        if (optional.isPresent() && (entity.getId() == null || entity.getId().equals(optional.get().getId()) == false)) {
+        if (optional.isPresent() && (entity.getUuid() == null || entity.getUuid().equals(optional.get().getUuid()) == false)) {
             MallExceptionCast.cast(ProductResultCode.CODE_IS_EXISTS);
         }
         // 如果是编辑，则代码不允许修改
-        if (StringUtils.isNotBlank(entity.getId())) {
-            Goods subject = findById(entity.getId());
+        if (StringUtils.isNotBlank(entity.getUuid())) {
+            Goods subject = findById(entity.getUuid());
             if (subject.getCode().equals(entity.getCode()) == false) {
                 MallExceptionCast.cast(ProductResultCode.CODE_IS_NOT_ALLOW_MODIFY);
             }

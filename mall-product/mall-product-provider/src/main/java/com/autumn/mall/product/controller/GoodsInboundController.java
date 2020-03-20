@@ -50,7 +50,7 @@ public class GoodsInboundController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据id删除实体对象", httpMethod = "DELETE")
-    @ApiImplicitParam(name = "id", value = "入库单id", required = true, dataType = "String", paramType = "path")
+    @ApiImplicitParam(name = "uuid", value = "入库单id", required = true, dataType = "String", paramType = "path")
     public ResponseResult deleteById(@PathVariable("id") String id) {
         goodsInboundService.deleteById(id);
         return ResponseResult.SUCCESS();
@@ -58,7 +58,7 @@ public class GoodsInboundController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "id", value = "入库单id", required = true, dataType = "String", paramType = "path")
+    @ApiImplicitParam(name = "uuid", value = "入库单id", required = true, dataType = "String", paramType = "path")
     public ResponseResult<GoodsInbound> findById(@PathVariable("id") String id) {
         GoodsInbound entity = goodsInboundService.findById(id);
         entity.getDetails().addAll(goodsInboundService.findDetailsByIdOrderByLineNumber(id));

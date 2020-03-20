@@ -39,12 +39,12 @@ public class TenantServiceImpl extends AbstractServiceImpl<Tenant> implements Te
         super.doBeforeSave(entity);
         // 不允许存在代码重复的商户
         Optional<Tenant> optional = tenantRepository.findByCode(entity.getCode());
-        if (optional.isPresent() && (entity.getId() == null || entity.getId().equals(optional.get().getId()) == false)) {
+        if (optional.isPresent() && (entity.getUuid() == null || entity.getUuid().equals(optional.get().getUuid()) == false)) {
             MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
         }
         // 如果是编辑，则代码不允许修改
-        if (StringUtils.isNotBlank(entity.getId())) {
-            Tenant tenant = findById(entity.getId());
+        if (StringUtils.isNotBlank(entity.getUuid())) {
+            Tenant tenant = findById(entity.getUuid());
             if (tenant.getCode().equals(entity.getCode()) == false) {
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_NOT_ALLOW_MODIFY);
             }

@@ -10,3 +10,18 @@ eureka:
   instance:
     lease-renewal-interval-in-seconds: 30 #30秒发送一次心跳，默认就是30秒
     lease-expiration-duration-in-seconds: 90 #90秒不发送心跳就认为过期，默认就是90秒
+zuul:
+  prefix: /api #添加路由前缀
+  routes:
+    mall-basis-provider:
+      path: /basis/**
+    mall-investment-provider:
+      path: /invest/** #以/api/invest/**开头的请求，全部由招商微服务处理
+    mall-sales-provider:
+      path: /sales/**
+    mall-account-provider:
+      path: /account/**
+    mall-product-provider:
+      path: /product/**
+    mall-stock-provider:
+      path: /stock/**

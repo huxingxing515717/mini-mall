@@ -40,10 +40,10 @@ public class OperationLogServiceImpl implements OperationLogService {
     @Override
     @Transactional
     public String save(OperationLog entity) {
-        if (entity.getId() == null) {
-            entity.setId(new IdWorker().nextId());
+        if (entity.getUuid() == null) {
+            entity.setUuid(new IdWorker().nextId());
         }
         entity = operationLogRepository.save(entity);
-        return entity.getId();
+        return entity.getUuid();
     }
 }

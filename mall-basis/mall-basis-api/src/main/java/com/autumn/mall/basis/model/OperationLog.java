@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
 
 /**
  * 操作日志实体
@@ -31,19 +30,23 @@ public class OperationLog implements IsEntity {
 
     @MongoId
     @ApiModelProperty(value = "唯一标识", dataType = "String")
-    private String id;
+    private String uuid;
 
     @NotBlank
     @ApiModelProperty(value = "实体标识", dataType = "String")
     private String entityKey;
 
     @NotBlank
-    @ApiModelProperty(value = "操作时间", dataType = "Date")
-    private Date time;
+    @ApiModelProperty(value = "操作时间", dataType = "String")
+    private String time;
 
     @NotBlank
     @ApiModelProperty(value = "操作人", dataType = "Admin")
     private Admin operator;
+
+    @NotBlank
+    @ApiModelProperty(value = "操作名称", dataType = "String")
+    private String actionName;
 
     @ApiModelProperty(value = "操作原因", dataType = "String")
     private String reason;

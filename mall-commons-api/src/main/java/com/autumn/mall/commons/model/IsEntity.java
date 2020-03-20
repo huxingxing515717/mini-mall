@@ -8,7 +8,7 @@ package com.autumn.mall.commons.model;
  */
 public interface IsEntity {
 
-    String getId();
+    String getUuid();
 
-    void setId(String id);
+    void setUuid(String uuid);
 }

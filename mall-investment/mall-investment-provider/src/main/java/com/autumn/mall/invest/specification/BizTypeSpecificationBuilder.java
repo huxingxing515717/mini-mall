@@ -7,7 +7,7 @@
  */
 package com.autumn.mall.invest.specification;
 
-import com.autumn.mall.commons.model.EntityState;
+import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +30,8 @@ public class BizTypeSpecificationBuilder implements SpecificationBuilder {
         if ("keyword".equals(property)) {
             String pattern = "%" + value + "%";
             return cb.or(cb.like(root.get("code"), pattern), cb.like(root.get("name"), pattern));
-        } else if ("entityState".equals(property)) {
-            return cb.equal(root.get("entityState"), EntityState.valueOf(value.toString()));
+        } else if ("usingState".equals(property)) {
+            return cb.equal(root.get("usingState"), UsingState.valueOf(value.toString()));
         }
         return null;
     }

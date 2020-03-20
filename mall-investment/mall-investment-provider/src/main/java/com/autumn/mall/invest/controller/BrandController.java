@@ -7,7 +7,6 @@
  */
 package com.autumn.mall.invest.controller;
 
-import com.autumn.mall.basis.client.OperationLogClient;
 import com.autumn.mall.commons.model.QueryDefinition;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.response.QueryResult;
@@ -34,8 +33,6 @@ public class BrandController implements BrandApi {
 
     @Autowired
     private BrandService brandService;
-    @Autowired
-    private OperationLogClient operationLogClient;
 
     @PostMapping
     @ApiOperation(value = "新增或编辑品牌", httpMethod = "POST")
@@ -47,11 +44,9 @@ public class BrandController implements BrandApi {
     @Override
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "id", value = "品牌id", required = true, dataType = "Long", paramType = "path")
+    @ApiImplicitParam(name = "uuid", value = "品牌id", required = true, dataType = "Long", paramType = "path")
     public ResponseResult<Brand> findById(@PathVariable("id") String id) {
-        Brand entity = brandService.findById(id);
-        entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(brandService.getCacheKeyPrefix() + id).getData());
-        return new ResponseResult(CommonsResultCode.SUCCESS, entity);
+        return new ResponseResult(CommonsResultCode.SUCCESS, brandService.findById(id));
     }
 
     @Override

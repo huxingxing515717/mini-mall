@@ -39,12 +39,12 @@ public class PaymentTypeServiceImpl extends AbstractServiceImpl<PaymentType> imp
         super.doBeforeSave(entity);
         // 不允许存在代码重复的付款方式
         Optional<PaymentType> optional = paymentTypeRepository.findByCode(entity.getCode());
-        if (optional.isPresent() && (entity.getId() == null || entity.getId().equals(optional.get().getId()) == false)) {
+        if (optional.isPresent() && (entity.getUuid() == null || entity.getUuid().equals(optional.get().getUuid()) == false)) {
             MallExceptionCast.cast(SalesResultCode.CODE_IS_EXISTS);
         }
         // 如果是编辑，则代码不允许修改
-        if (StringUtils.isNotBlank(entity.getId())) {
-            PaymentType tenant = findById(entity.getId());
+        if (StringUtils.isNotBlank(entity.getUuid())) {
+            PaymentType tenant = findById(entity.getUuid());
             if (tenant.getCode().equals(entity.getCode()) == false) {
                 MallExceptionCast.cast(SalesResultCode.CODE_IS_NOT_ALLOW_MODIFY);
             }

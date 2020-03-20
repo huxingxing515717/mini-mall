@@ -11,10 +11,10 @@ public enum OrderDirection {
     /**
      * 升序
      */
-    asc,
+    asc, ASC,
 
     /**
      * 降序
      */
-    desc;
+    desc, DESC;
 }

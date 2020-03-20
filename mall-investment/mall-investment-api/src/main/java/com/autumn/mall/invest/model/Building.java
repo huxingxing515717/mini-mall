@@ -8,8 +8,8 @@
 package com.autumn.mall.invest.model;
 
 import com.autumn.mall.basis.model.OperationLog;
-import com.autumn.mall.commons.model.EntityState;
 import com.autumn.mall.commons.model.IsEntity;
+import com.autumn.mall.commons.model.UsingState;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,7 +34,7 @@ public class Building implements IsEntity {
 
     @Id
     @ApiModelProperty(value = "唯一标识", dataType = "String")
-    private String id;
+    private String uuid;
 
     @NotBlank
     @ApiModelProperty(value = "项目id", dataType = "String")
@@ -51,8 +51,8 @@ public class Building implements IsEntity {
     private String name;
 
     @Enumerated(value = EnumType.STRING)
-    @ApiModelProperty(value = "状态", dataType = "EntityState")
-    private EntityState entityState;
+    @ApiModelProperty(value = "状态", dataType = "UsingState")
+    private UsingState usingState;
 
     @Length(max = 1024, message = "说明最大长度不超过64")
     @ApiModelProperty(value = "说明", dataType = "String")

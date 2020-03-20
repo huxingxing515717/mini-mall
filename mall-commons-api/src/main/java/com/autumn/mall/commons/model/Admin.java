@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Admin implements IsEntity {
-    private String id;
+    private String uuid;
     private String loginName;
     private String displayName;
     private String password;

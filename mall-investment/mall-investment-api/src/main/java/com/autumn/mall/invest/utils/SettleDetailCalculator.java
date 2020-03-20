@@ -33,7 +33,7 @@ public class SettleDetailCalculator {
         List<DateRange> dateRanges = splitContractDate(contract.getBeginDate(), contract.getEndDate());
         for (DateRange dateRange : dateRanges) {
             SettleDetail detail = new SettleDetail();
-            detail.setContractId(contract.getId());
+            detail.setContractId(contract.getUuid());
             detail.setBeginDate(dateRange.getBeginDate());
             detail.setEndDate(dateRange.getEndDate());
 

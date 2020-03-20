@@ -47,7 +47,7 @@ public class PaymentTypeController implements PaymentTypeApi {
     @Override
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "id", value = "付款方式id", required = true, dataType = "Long", paramType = "path")
+    @ApiImplicitParam(name = "uuid", value = "付款方式id", required = true, dataType = "Long", paramType = "path")
     public ResponseResult<PaymentType> findById(@PathVariable("id") String id) {
         PaymentType entity = paymentTypeService.findById(id);
         entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(paymentTypeService.getCacheKeyPrefix() + id).getData());

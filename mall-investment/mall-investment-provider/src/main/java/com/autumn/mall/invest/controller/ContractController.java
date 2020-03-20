@@ -8,7 +8,6 @@
 package com.autumn.mall.invest.controller;
 
 import com.autumn.mall.account.client.SubjectClient;
-import com.autumn.mall.basis.client.OperationLogClient;
 import com.autumn.mall.commons.model.QueryDefinition;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.response.QueryResult;
@@ -53,8 +52,6 @@ public class ContractController implements ContractApi {
     private BizTypeService bizTypeService;
     @Autowired
     private SubjectClient subjectClient;
-    @Autowired
-    private OperationLogClient operationLogClient;
 
     @PostMapping
     @ApiOperation(value = "新增或编辑合同", httpMethod = "POST")
@@ -64,11 +61,11 @@ public class ContractController implements ContractApi {
     }
 
     @Override
-    @GetMapping("/{id}")
-    @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "id", value = "合同id", required = true, dataType = "String", paramType = "path")
-    public ResponseResult<Contract> findById(@PathVariable("id") String id) {
-        Contract contract = contractService.findById(id);
+    @GetMapping("/{uuid}")
+    @ApiOperation(value = "根据uuid获取实体对象", httpMethod = "GET")
+    @ApiImplicitParam(name = "uuid", value = "合同id", required = true, dataType = "String", paramType = "path")
+    public ResponseResult<Contract> findById(@PathVariable("uuid") String uuid) {
+        Contract contract = contractService.findById(uuid);
         obtainContractInfo(contract);
         return new ResponseResult(CommonsResultCode.SUCCESS, contract);
     }
@@ -90,6 +87,5 @@ public class ContractController implements ContractApi {
         contract.setBrand(brandService.findById(contract.getBrandId()));
         contract.setBizType(bizTypeService.findById(contract.getBiztypeId()));
         contract.setSubject(subjectClient.findById(contract.getSubjectId()).getData());
-        contract.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(buildingService.getCacheKeyPrefix() + contract.getId()).getData());
     }
 }

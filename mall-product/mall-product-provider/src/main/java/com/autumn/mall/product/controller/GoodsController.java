@@ -47,7 +47,7 @@ public class GoodsController implements GoodsApi {
     @Override
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "id", value = "商品id", required = true, dataType = "String", paramType = "path")
+    @ApiImplicitParam(name = "uuid", value = "商品id", required = true, dataType = "String", paramType = "path")
     public ResponseResult<Goods> findById(@PathVariable("id") String id) {
         Goods entity = goodsService.findById(id);
         entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(goodsService.getCacheKeyPrefix() + id).getData());

@@ -55,9 +55,9 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
     }
 
     @Override
-    public void doAfterDeleted(String id) {
-        super.doAfterDeleted(id);
-        goodsInboundDetailRepository.deleteByGoodsInboundId(id);
+    public void doAfterDeleted(String uuid) {
+        super.doAfterDeleted(uuid);
+        goodsInboundDetailRepository.deleteByGoodsInboundId(uuid);
     }
 
     @Override

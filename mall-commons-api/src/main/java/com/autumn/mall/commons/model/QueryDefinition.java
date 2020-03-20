@@ -7,10 +7,14 @@
  */
 package com.autumn.mall.commons.model;
 
+import cn.hutool.json.JSONUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 查询定义
@@ -22,21 +26,22 @@ import java.util.*;
 @NoArgsConstructor
 public class QueryDefinition {
 
-    private int page = 0;
+    private int page = 1;
     private int pageSize = 10;
     private String keyword;
-    private Map<String, Object> params = new HashMap<>();
+    private Map<String, Object> filter = new HashMap<>();
     private List<Order> orders = new ArrayList<>();
+    private boolean querySummary = false;
 
-    public Map<String, Object> getParams() {
-        return this.params == null ? new HashMap<>() : this.params;
+    public Map<String, Object> getFilter() {
+        return this.filter == null ? new HashMap<>() : this.filter;
     }
 
-    public List<Order> getOrders() {
-        if (this.orders == null || this.orders.isEmpty()) {
-            Order order = new Order("id", OrderDirection.desc);
-            return Arrays.asList(order);
-        }
-        return this.orders;
+    public void setSort(String sort) {
+        orders.addAll(JSONUtil.toList(JSONUtil.parseArray(sort), Order.class));
+    }
+
+    public int getCurrentPage() {
+        return page <= 1 ? 0 : page - 1;
     }
 }

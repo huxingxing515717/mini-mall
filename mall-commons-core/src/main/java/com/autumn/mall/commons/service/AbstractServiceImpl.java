@@ -51,12 +51,15 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
     @Transactional
     public String save(T entity) {
         doBeforeSave(entity);
-        if (entity.getId() == null) {
-            entity.setId(new IdWorker().nextId());
+        String actionName = "编辑";
+        if (entity.getUuid() == null) {
+            actionName = "新建";
+            entity.setUuid(new IdWorker().nextId());
         }
         entity = getRepository().save(entity);
+        saveOperationLog(entity.getUuid(), actionName);
         doAfterSave(entity);
-        return entity.getId();
+        return entity.getUuid();
     }
 
     @Override
@@ -94,14 +97,14 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
     private PageRequest getPageRequest(QueryDefinition definition) {
         List<Order> orders = definition.getOrders();
         if (orders.isEmpty()) {
-            orders.add(new Order("id", OrderDirection.asc));
+            orders.add(new Order("uuid", OrderDirection.asc));
         }
         List<Sort.Order> sortOrders = new ArrayList<>();
         for (Order order : orders) {
             sortOrders.add(new org.springframework.data.domain.Sort.Order(
                     Sort.Direction.valueOf(order.getDirection().name().toUpperCase()), order.getProperty()));
         }
-        return PageRequest.of(definition.getPage(), definition.getPageSize(), Sort.by(sortOrders));
+        return PageRequest.of(definition.getCurrentPage(), definition.getPageSize(), Sort.by(sortOrders));
     }
 
     private Specification<T> getSpecification(QueryDefinition definition) {
@@ -111,7 +114,7 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
             public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query,
                                          CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                Map<String, Object> params = definition.getParams();
+                Map<String, Object> params = definition.getFilter();
                 for (String property : params.keySet()) {
                     Predicate predicate = getSpecificationBuilder().build(root, query, criteriaBuilder,
                             property, params.get(property));
@@ -149,25 +152,29 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
      */
     protected void doAfterSave(T entity) {
         // 更新缓存，key的过期时间为1天
-        redisUtils.set(getCacheKey(entity.getId()), entity, 86400L);
-        // 记录操作日志
-        rabbitMQUtils.sendMsg(Exchanges.MALL_COMMONS_EXCHANGE, RoutingKeys.ENTITY_UPDATED, getOperationLog(entity.getId()));
+        redisUtils.set(getCacheKey(entity.getUuid()), entity, 86400L);
     }
 
-    private Map<String, String> getOperationLog(String id) {
+    public void saveOperationLog(String uuid, String actionName) {
+        // 记录操作日志
+        rabbitMQUtils.sendMsg(Exchanges.MALL_COMMONS_EXCHANGE, RoutingKeys.ENTITY_UPDATED, getOperationLog(uuid, actionName));
+    }
+
+    private Map<String, String> getOperationLog(String uuid, String actionName) {
         Map<String, String> log = new HashMap<>();
-        log.put("entityKey", getCacheKey(id));
+        log.put("entityKey", getCacheKey(uuid));
         log.put("time", DateUtil.now());
         log.put("operator", JSONUtil.toJsonStr(Admin.getDefaultUser()));
+        log.put("actionName", actionName);
         return log;
     }
 
-    public void doAfterDeleted(String id) {
-        redisUtils.remove(getCacheKey(id));
+    public void doAfterDeleted(String uuid) {
+        redisUtils.remove(getCacheKey(uuid));
     }
 
-    private String getCacheKey(String id) {
-        return getCacheKeyPrefix() + id;
+    private String getCacheKey(String uuid) {
+        return getCacheKeyPrefix() + uuid;
     }
 
     public abstract BaseRepository<T> getRepository();
