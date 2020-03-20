@@ -46,7 +46,7 @@ public class StoreServiceImpl extends AbstractServiceImpl<Store> implements Stor
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
             }
             // 如果是已禁用状态，不允许修改
-            if (optional.get().getUsingState().equals(UsingState.disabled)) {
+            if (optional.get().getState().equals(UsingState.disabled)) {
                 MallExceptionCast.cast(InvestResultCode.ENTITY_IS_DISABLED);
             }
         }
@@ -69,11 +69,11 @@ public class StoreServiceImpl extends AbstractServiceImpl<Store> implements Stor
             MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
         }
         Store store = optional.get();
-        if ((UsingState.using.equals(targetState) && UsingState.using.equals(store.getUsingState())
-                || (UsingState.disabled.equals(targetState) && UsingState.disabled.equals(store.getUsingState())))) {
+        if ((UsingState.using.equals(targetState) && UsingState.using.equals(store.getState())
+                || (UsingState.disabled.equals(targetState) && UsingState.disabled.equals(store.getState())))) {
             MallExceptionCast.cast(InvestResultCode.ENTITY_IS_EQUALS_TARGET_STATE);
         }
-        store.setUsingState(targetState);
+        store.setState(targetState);
         storeRepository.save(store);
         saveOperationLog(uuid, UsingState.using.equals(targetState) ? "启用" : "停用");
         doAfterSave(store);

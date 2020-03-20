@@ -7,7 +7,6 @@
  */
 package com.autumn.mall.invest.model;
 
-import com.autumn.mall.basis.model.OperationLog;
 import com.autumn.mall.commons.model.IsEntity;
 import com.autumn.mall.commons.model.UsingState;
 import io.swagger.annotations.ApiModel;
@@ -17,8 +16,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 楼宇
@@ -37,8 +34,8 @@ public class Building implements IsEntity {
     private String uuid;
 
     @NotBlank
-    @ApiModelProperty(value = "项目id", dataType = "String")
-    private String storeId;
+    @ApiModelProperty(value = "项目uuid", dataType = "String")
+    private String storeUuid;
 
     @NotBlank
     @Length(max = 32, message = "代码最大长度不超过32")
@@ -52,7 +49,7 @@ public class Building implements IsEntity {
 
     @Enumerated(value = EnumType.STRING)
     @ApiModelProperty(value = "状态", dataType = "UsingState")
-    private UsingState usingState;
+    private UsingState state;
 
     @Length(max = 1024, message = "说明最大长度不超过64")
     @ApiModelProperty(value = "说明", dataType = "String")
@@ -60,6 +57,4 @@ public class Building implements IsEntity {
 
     @Transient
     private Store store;
-    @Transient
-    private List<OperationLog> operationLogs = new ArrayList<>();
 }

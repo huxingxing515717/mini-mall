@@ -32,8 +32,8 @@ public class ContractSpecificationBuilder implements SpecificationBuilder {
             return cb.or(cb.like(root.get("serialNumber"), pattern), cb.like(root.get("signboard"), pattern));
         } else if ("bizState".equals(property)) {
             return cb.equal(root.get("bizState"), BizState.valueOf(value.toString()));
-        } else if ("storeId".equals(property)) {
-            return cb.equal(root.get("storeId"), value);
+        } else if ("storeUuid".equals(property)) {
+            return cb.equal(root.get("storeUuid"), value);
         } else if ("buildingId".equals(property)) {
             return cb.equal(root.get("buildingId"), value);
         } else if ("floorId".equals(property)) {

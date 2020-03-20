@@ -30,10 +30,10 @@ public class FloorSpecificationBuilder implements SpecificationBuilder {
         if ("keyword".equals(property)) {
             String pattern = "%" + value + "%";
             return cb.or(cb.like(root.get("code"), pattern), cb.like(root.get("name"), pattern));
-        } else if ("usingState".equals(property)) {
-            return cb.equal(root.get("usingState"), UsingState.valueOf(value.toString()));
-        } else if ("storeId".equals(property)) {
-            return cb.equal(root.get("storeId"), value);
+        } else if ("state".equals(property)) {
+            return cb.equal(root.get("state"), UsingState.valueOf(value.toString()));
+        } else if ("storeUuid".equals(property)) {
+            return cb.equal(root.get("storeUuid"), value);
         } else if ("buildingId".equals(property)) {
             return cb.equal(root.get("buildingId"), value);
         }

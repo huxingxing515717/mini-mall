@@ -84,11 +84,11 @@ public class StoreController implements StoreApi {
             return result;
         }
         definition.setPageSize(1);
-        definition.getFilter().put("usingState", null);
+        definition.getFilter().put("state", null);
         result.put("all", storeService.query(definition).getTotal());
-        definition.getFilter().put("usingState", UsingState.using.name());
+        definition.getFilter().put("state", UsingState.using.name());
         result.put(UsingState.using.name(), storeService.query(definition).getTotal());
-        definition.getFilter().put("usingState", UsingState.disabled.name());
+        definition.getFilter().put("state", UsingState.disabled.name());
         result.put(UsingState.disabled.name(), storeService.query(definition).getTotal());
         return result;
     }

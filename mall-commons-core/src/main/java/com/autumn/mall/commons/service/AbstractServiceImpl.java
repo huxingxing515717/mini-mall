@@ -64,20 +64,22 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
 
     @Override
     @Transactional
-    public void deleteById(String id) {
-        getRepository().deleteById(id);
-        doAfterDeleted(id);
+    public void deleteById(String uuid) {
+        getRepository().deleteById(uuid);
+        doAfterDeleted(uuid);
     }
 
     @Override
-    public T findById(String id) {
+    public T findById(String uuid) {
         // 查询缓存
-        Object result = redisUtils.get(getCacheKey(id));
+        Object result = redisUtils.get(getCacheKey(uuid));
         if (result == null) {
-            Optional<T> optional = getRepository().findById(id);
+            Optional<T> optional = getRepository().findById(uuid);
             if (optional.isPresent() == false) {
                 MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
             }
+            // 放入缓存
+            redisUtils.set(getCacheKey(uuid), optional.get(), 86400L);
             return optional.get();
         }
         return (T) result;

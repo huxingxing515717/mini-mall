@@ -18,5 +18,5 @@ import java.util.Optional;
  */
 public interface BuildingRepository extends BaseRepository<Building> {
 
-    Optional<Building> findByStoreIdAndCode(String storeId, String code);
+    Optional<Building> findByStoreUuidAndCode(String storeUuid, String code);
 }

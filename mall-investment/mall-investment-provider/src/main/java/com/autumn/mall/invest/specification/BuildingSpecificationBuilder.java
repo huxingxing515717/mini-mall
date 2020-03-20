@@ -15,6 +15,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Anbang713
@@ -30,10 +32,16 @@ public class BuildingSpecificationBuilder implements SpecificationBuilder {
         if ("keyword".equals(property)) {
             String pattern = "%" + value + "%";
             return cb.or(cb.like(root.get("code"), pattern), cb.like(root.get("name"), pattern));
-        } else if ("usingState".equals(property)) {
-            return cb.equal(root.get("usingState"), UsingState.valueOf(value.toString()));
-        } else if ("storeId".equals(property)) {
-            return cb.equal(root.get("storeId"), value);
+        } else if ("state".equals(property)) {
+            if (value instanceof List) {
+                List<Predicate> predicates = new ArrayList<>();
+                ((List) value).stream().forEach(val -> predicates.add(cb.equal(root.get("state"), UsingState.valueOf(val.toString()))));
+                return cb.or(predicates.toArray(new Predicate[]{}));
+            } else {
+                return cb.equal(root.get("state"), UsingState.valueOf(value.toString()));
+            }
+        } else if ("storeUuid".equals(property)) {
+            return cb.equal(root.get("storeUuid"), value);
         }
         return null;
     }

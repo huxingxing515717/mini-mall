@@ -45,7 +45,7 @@ public class Store implements IsEntity {
 
     @Enumerated(value = EnumType.STRING)
     @ApiModelProperty(value = "状态", dataType = "UsingState")
-    private UsingState usingState;
+    private UsingState state;
 
     @Length(max = 1024, message = "说明最大长度不超过64")
     @ApiModelProperty(value = "说明", dataType = "String")

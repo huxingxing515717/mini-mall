@@ -19,19 +19,19 @@ public interface CrudService<T extends IsEntity> {
     String save(T entity);
 
     /**
-     * 根据主键id，删除一条记录
+     * 根据主键uuid，删除一条记录
      *
-     * @param id 主键id
+     * @param uuid 主键uuid
      */
-    void deleteById(String id);
+    void deleteById(String uuid);
 
     /**
      * 通过主键id，获取实体
      *
-     * @param id 主键id
+     * @param uuid 主键id
      * @return 实体
      */
-    T findById(String id);
+    T findById(String uuid);
 
     /**
      * 根据关键字分页查询

@@ -32,13 +32,13 @@ public class StoreSpecificationBuilder implements SpecificationBuilder {
         if ("keyword".equals(property)) {
             String pattern = "%" + value + "%";
             return cb.or(cb.like(root.get("code"), pattern), cb.like(root.get("name"), pattern));
-        } else if ("usingState".equals(property)) {
+        } else if ("state".equals(property)) {
             if (value instanceof List) {
                 List<Predicate> predicates = new ArrayList<>();
-                ((List) value).stream().forEach(val -> predicates.add(cb.equal(root.get("usingState"), UsingState.valueOf(val.toString()))));
+                ((List) value).stream().forEach(val -> predicates.add(cb.equal(root.get("state"), UsingState.valueOf(val.toString()))));
                 return cb.or(predicates.toArray(new Predicate[]{}));
             } else {
-                return cb.equal(root.get("usingState"), UsingState.valueOf(value.toString()));
+                return cb.equal(root.get("state"), UsingState.valueOf(value.toString()));
             }
         }
         return null;
