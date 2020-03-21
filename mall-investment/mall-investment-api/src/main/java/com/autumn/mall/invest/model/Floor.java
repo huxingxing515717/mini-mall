@@ -34,12 +34,12 @@ public class Floor implements IsEntity {
     private String uuid;
 
     @NotBlank
-    @ApiModelProperty(value = "项目id", dataType = "String")
-    private String storeId;
+    @ApiModelProperty(value = "项目uuid", dataType = "String")
+    private String storeUuid;
 
     @NotBlank
-    @ApiModelProperty(value = "楼宇id", dataType = "String")
-    private String buildingId;
+    @ApiModelProperty(value = "楼宇uuid", dataType = "String")
+    private String buildingUuid;
 
     @NotBlank
     @Length(max = 32, message = "代码最大长度不超过32")
@@ -53,7 +53,7 @@ public class Floor implements IsEntity {
 
     @Enumerated(value = EnumType.STRING)
     @ApiModelProperty(value = "状态", dataType = "UsingState")
-    private UsingState usingState;
+    private UsingState state;
 
     @Length(max = 1024, message = "说明最大长度不超过64")
     @ApiModelProperty(value = "说明", dataType = "String")

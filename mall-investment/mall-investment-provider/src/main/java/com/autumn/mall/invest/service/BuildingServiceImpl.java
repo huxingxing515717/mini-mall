@@ -9,10 +9,12 @@ package com.autumn.mall.invest.service;
 
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.UsingState;
+import com.autumn.mall.commons.repository.OrderBuilder;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
 import com.autumn.mall.invest.model.Building;
+import com.autumn.mall.invest.order.BuildingOrderBuilder;
 import com.autumn.mall.invest.repository.BuildingRepository;
 import com.autumn.mall.invest.response.InvestResultCode;
 import com.autumn.mall.invest.specification.BuildingSpecificationBuilder;
@@ -90,6 +92,11 @@ public class BuildingServiceImpl extends AbstractServiceImpl<Building> implement
     @Override
     public SpecificationBuilder getSpecificationBuilder() {
         return specificationBuilder;
+    }
+
+    @Override
+    public OrderBuilder getOrderBuilder() {
+        return new BuildingOrderBuilder();
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.autumn.mall.commons.response.ResponseResult;
 import com.autumn.mall.commons.response.SummaryQueryResult;
 import com.autumn.mall.invest.client.BuildingApi;
 import com.autumn.mall.invest.model.Building;
+import com.autumn.mall.invest.model.Store;
 import com.autumn.mall.invest.service.BuildingService;
 import com.autumn.mall.invest.service.StoreService;
 import io.swagger.annotations.Api;
@@ -26,7 +27,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 楼宇控制器
@@ -64,7 +68,7 @@ public class BuildingController implements BuildingApi {
     @PutMapping("/{uuid}")
     @ApiOperation(value = "改变实体状态", httpMethod = "PUT")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "uuid", value = "uuid", required = true, dataType = "Long", paramType = "path"),
+            @ApiImplicitParam(name = "uuid", value = "uuid", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "targetState", value = "目标状态", required = true, dataType = "String", paramType = "query")
     })
     public ResponseResult changeState(@PathVariable("uuid") String uuid, @RequestParam("targetState") String targetState) {
@@ -79,7 +83,7 @@ public class BuildingController implements BuildingApi {
     public ResponseResult<SummaryQueryResult<Building>> query(@RequestBody QueryDefinition definition) {
         QueryResult<Building> queryResult = buildingService.query(definition);
         if (queryResult.getRecords().isEmpty() == false) {
-            queryResult.getRecords().stream().forEach(building -> building.setStore(storeService.findById(building.getStoreUuid())));
+            fetchParts(queryResult.getRecords());
         }
         SummaryQueryResult summaryQueryResult = SummaryQueryResult.newInstance(queryResult);
         summaryQueryResult.getSummary().putAll(querySummary(definition));
@@ -92,12 +96,18 @@ public class BuildingController implements BuildingApi {
             return result;
         }
         definition.setPageSize(1);
-        definition.getFilter().put("usingState", null);
+        definition.getFilter().put("state", null);
         result.put("all", buildingService.query(definition).getTotal());
-        definition.getFilter().put("usingState", UsingState.using.name());
+        definition.getFilter().put("state", UsingState.using.name());
         result.put(UsingState.using.name(), buildingService.query(definition).getTotal());
-        definition.getFilter().put("usingState", UsingState.disabled.name());
+        definition.getFilter().put("state", UsingState.disabled.name());
         result.put(UsingState.disabled.name(), buildingService.query(definition).getTotal());
         return result;
+    }
+
+    private void fetchParts(List<Building> buildings) {
+        Set<String> storeUuids = buildings.stream().map(building -> building.getStoreUuid()).collect(Collectors.toSet());
+        Map<String, Store> storeMap = storeService.findAllByUuids(storeUuids);
+        buildings.stream().forEach(building -> building.setStore(storeMap.get(building.getStoreUuid())));
     }
 }

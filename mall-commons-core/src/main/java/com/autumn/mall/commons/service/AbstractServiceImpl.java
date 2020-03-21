@@ -7,13 +7,17 @@
  */
 package com.autumn.mall.commons.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.*;
 import com.autumn.mall.commons.mq.Exchanges;
 import com.autumn.mall.commons.mq.RoutingKeys;
 import com.autumn.mall.commons.repository.BaseRepository;
+import com.autumn.mall.commons.repository.DefaultOrderBuilder;
+import com.autumn.mall.commons.repository.OrderBuilder;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.response.QueryResult;
@@ -79,10 +83,24 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
                 MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
             }
             // 放入缓存
-            redisUtils.set(getCacheKey(uuid), optional.get(), 86400L);
+            redisUtils.set(getCacheKey(uuid), optional.get(), RandomUtil.randomLong(3600, 86400));
             return optional.get();
         }
         return (T) result;
+    }
+
+    @Override
+    public Map<String, T> findAllByUuids(Set<String> uuids) {
+        if (CollectionUtil.isEmpty(uuids)) {
+            return new HashMap<>();
+        }
+        Iterator<T> iterator = getRepository().findAllById(uuids).iterator();
+        Map<String, T> result = new HashMap<>();
+        while (iterator.hasNext()) {
+            T entity = iterator.next();
+            result.put(entity.getUuid(), entity);
+        }
+        return result;
     }
 
     @Override
@@ -103,8 +121,7 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
         }
         List<Sort.Order> sortOrders = new ArrayList<>();
         for (Order order : orders) {
-            sortOrders.add(new org.springframework.data.domain.Sort.Order(
-                    Sort.Direction.valueOf(order.getDirection().name().toUpperCase()), order.getProperty()));
+            sortOrders.add(getOrderBuilder().build(order.getDirection(), order.getProperty()));
         }
         return PageRequest.of(definition.getCurrentPage(), definition.getPageSize(), Sort.by(sortOrders));
     }
@@ -154,7 +171,7 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
      */
     protected void doAfterSave(T entity) {
         // 更新缓存，key的过期时间为1天
-        redisUtils.set(getCacheKey(entity.getUuid()), entity, 86400L);
+        redisUtils.set(getCacheKey(entity.getUuid()), entity, RandomUtil.randomLong(3600, 86400));
     }
 
     public void saveOperationLog(String uuid, String actionName) {
@@ -182,4 +199,8 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
     public abstract BaseRepository<T> getRepository();
 
     public abstract SpecificationBuilder getSpecificationBuilder();
+
+    public OrderBuilder getOrderBuilder() {
+        return new DefaultOrderBuilder();
+    }
 }

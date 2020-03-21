@@ -34,8 +34,8 @@ public class PositionSpecificationBuilder implements SpecificationBuilder {
             return cb.equal(root.get("state"), UsingState.valueOf(value.toString()));
         } else if ("storeUuid".equals(property)) {
             return cb.equal(root.get("storeUuid"), value);
-        } else if ("buildingId".equals(property)) {
-            return cb.equal(root.get("buildingId"), value);
+        } else if ("buildingUuid".equals(property)) {
+            return cb.equal(root.get("buildingUuid"), value);
         } else if ("floorId".equals(property)) {
             return cb.equal(root.get("floorId"), value);
         }

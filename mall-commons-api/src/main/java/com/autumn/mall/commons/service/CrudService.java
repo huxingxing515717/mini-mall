@@ -4,6 +4,9 @@ import com.autumn.mall.commons.model.IsEntity;
 import com.autumn.mall.commons.model.QueryDefinition;
 import com.autumn.mall.commons.response.QueryResult;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Anbang713
  * @create 2020/3/14
@@ -32,6 +35,14 @@ public interface CrudService<T extends IsEntity> {
      * @return 实体
      */
     T findById(String uuid);
+
+    /**
+     * 通过主键集合获取实体，并将结果转换成map
+     *
+     * @param uuids
+     * @return
+     */
+    Map<String, T> findAllByUuids(Set<String> uuids);
 
     /**
      * 根据关键字分页查询

@@ -51,7 +51,7 @@ public class StoreController implements StoreApi {
     @Override
     @GetMapping("/{uuid}")
     @ApiOperation(value = "根据uuid获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "uuid", value = "唯一标识", required = true, dataType = "Long", paramType = "path")
+    @ApiImplicitParam(name = "uuid", value = "唯一标识", required = true, dataType = "String", paramType = "path")
     public ResponseResult<Store> findById(@PathVariable("uuid") String uuid) {
         return new ResponseResult(CommonsResultCode.SUCCESS, storeService.findById(uuid));
     }
@@ -59,7 +59,7 @@ public class StoreController implements StoreApi {
     @PutMapping("/{uuid}")
     @ApiOperation(value = "改变实体状态", httpMethod = "PUT")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "uuid", value = "uuid", required = true, dataType = "Long", paramType = "path"),
+            @ApiImplicitParam(name = "uuid", value = "uuid", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "targetState", value = "目标状态", required = true, dataType = "String", paramType = "query")
     })
     public ResponseResult changeState(@PathVariable("uuid") String uuid, @RequestParam("targetState") String targetState) {

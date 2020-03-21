@@ -7,8 +7,10 @@
  */
 package com.autumn.mall.invest.service;
 
+import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.service.CacheService;
 import com.autumn.mall.commons.service.CrudService;
+import com.autumn.mall.commons.service.SupportStateService;
 import com.autumn.mall.invest.model.Floor;
 
 /**
@@ -17,6 +19,6 @@ import com.autumn.mall.invest.model.Floor;
  * @author Anbang713
  * @create 2020/3/15
  */
-public interface FloorService extends CrudService<Floor>, CacheService {
+public interface FloorService extends CrudService<Floor>, CacheService, SupportStateService<UsingState> {
 
 }
