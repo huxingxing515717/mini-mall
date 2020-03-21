@@ -83,9 +83,7 @@ public class FloorController implements FloorApi {
     @ApiImplicitParam(name = "definition", value = "查询定义", required = true, dataType = "QueryDefinition")
     public ResponseResult<SummaryQueryResult<Floor>> query(@RequestBody QueryDefinition definition) {
         QueryResult<Floor> queryResult = floorService.query(definition);
-        if (queryResult.getRecords().isEmpty() == false) {
-            fetchParts(queryResult.getRecords());
-        }
+        fetchParts(queryResult.getRecords(), definition.getFetchParts());
         SummaryQueryResult summaryQueryResult = SummaryQueryResult.newInstance(queryResult);
         summaryQueryResult.getSummary().putAll(querySummary(definition));
         return new ResponseResult(CommonsResultCode.SUCCESS, summaryQueryResult);
@@ -106,7 +104,10 @@ public class FloorController implements FloorApi {
         return result;
     }
 
-    private void fetchParts(List<Floor> floors) {
+    private void fetchParts(List<Floor> floors, List<String> fetchParts) {
+        if (floors.isEmpty() || fetchParts.isEmpty()) {
+            return;
+        }
         Set<String> storeUuids = new HashSet<>();
         Set<String> buildingUuids = new HashSet<>();
         floors.stream().forEach(floor -> {
@@ -114,9 +115,9 @@ public class FloorController implements FloorApi {
             buildingUuids.add(floor.getBuildingUuid());
         });
         // 项目
-        Map<String, Store> storeMap = storeService.findAllByUuids(storeUuids);
+        Map<String, Store> storeMap = fetchParts.contains("store") ? storeService.findAllByUuids(storeUuids) : new HashMap<>();
         // 楼宇
-        Map<String, Building> buildingMap = buildingService.findAllByUuids(buildingUuids);
+        Map<String, Building> buildingMap = fetchParts.contains("building") ? buildingService.findAllByUuids(buildingUuids) : new HashMap<>();
         floors.stream().forEach(floor -> {
             floor.setStore(storeMap.get(floor.getStoreUuid()));
             floor.setBuilding(buildingMap.get(floor.getBuildingUuid()));

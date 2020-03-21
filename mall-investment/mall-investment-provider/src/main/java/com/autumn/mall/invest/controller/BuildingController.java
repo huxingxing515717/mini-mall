@@ -82,9 +82,7 @@ public class BuildingController implements BuildingApi {
     @ApiImplicitParam(name = "definition", value = "查询定义", required = true, dataType = "QueryDefinition")
     public ResponseResult<SummaryQueryResult<Building>> query(@RequestBody QueryDefinition definition) {
         QueryResult<Building> queryResult = buildingService.query(definition);
-        if (queryResult.getRecords().isEmpty() == false) {
-            fetchParts(queryResult.getRecords());
-        }
+        fetchParts(queryResult.getRecords(), definition.getFetchParts());
         SummaryQueryResult summaryQueryResult = SummaryQueryResult.newInstance(queryResult);
         summaryQueryResult.getSummary().putAll(querySummary(definition));
         return new ResponseResult(CommonsResultCode.SUCCESS, summaryQueryResult);
@@ -105,9 +103,14 @@ public class BuildingController implements BuildingApi {
         return result;
     }
 
-    private void fetchParts(List<Building> buildings) {
-        Set<String> storeUuids = buildings.stream().map(building -> building.getStoreUuid()).collect(Collectors.toSet());
-        Map<String, Store> storeMap = storeService.findAllByUuids(storeUuids);
-        buildings.stream().forEach(building -> building.setStore(storeMap.get(building.getStoreUuid())));
+    private void fetchParts(List<Building> buildings, List<String> fetchParts) {
+        if (buildings.isEmpty() || fetchParts.isEmpty()) {
+            return;
+        }
+        if (fetchParts.contains("store")) {
+            Set<String> storeUuids = buildings.stream().map(building -> building.getStoreUuid()).collect(Collectors.toSet());
+            Map<String, Store> storeMap = storeService.findAllByUuids(storeUuids);
+            buildings.stream().forEach(building -> building.setStore(storeMap.get(building.getStoreUuid())));
+        }
     }
 }

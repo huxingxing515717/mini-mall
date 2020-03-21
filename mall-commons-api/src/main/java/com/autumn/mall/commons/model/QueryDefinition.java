@@ -32,6 +32,7 @@ public class QueryDefinition {
     private Map<String, Object> filter = new HashMap<>();
     private List<Order> orders = new ArrayList<>();
     private boolean querySummary = false;
+    private List<String> fetchParts = new ArrayList<>();
 
     public Map<String, Object> getFilter() {
         return this.filter == null ? new HashMap<>() : this.filter;
