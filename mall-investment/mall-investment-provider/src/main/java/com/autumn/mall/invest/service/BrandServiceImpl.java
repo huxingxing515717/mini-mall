@@ -8,7 +8,9 @@
 package com.autumn.mall.invest.service;
 
 import com.autumn.mall.commons.exception.MallExceptionCast;
+import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
+import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
 import com.autumn.mall.invest.model.Brand;
 import com.autumn.mall.invest.repository.BrandRepository;
@@ -39,8 +41,14 @@ public class BrandServiceImpl extends AbstractServiceImpl<Brand> implements Bran
         super.doBeforeSave(entity);
         // 不允许存在代码重复的项目
         Optional<Brand> optional = brandRepository.findByCode(entity.getCode());
-        if (optional.isPresent() && (entity.getUuid() == null || entity.getUuid().equals(optional.get().getUuid()) == false)) {
-            MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
+        if (optional.isPresent()) {
+            if (entity.getUuid() == null || entity.getUuid().equals(optional.get().getUuid()) == false) {
+                MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
+            }
+            // 如果是已禁用状态，不允许修改
+            if (optional.get().getState().equals(UsingState.disabled)) {
+                MallExceptionCast.cast(InvestResultCode.ENTITY_IS_DISABLED);
+            }
         }
         // 如果是编辑，则代码不允许修改
         if (StringUtils.isNotBlank(entity.getUuid())) {
@@ -49,6 +57,26 @@ public class BrandServiceImpl extends AbstractServiceImpl<Brand> implements Bran
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_NOT_ALLOW_MODIFY);
             }
         }
+    }
+
+    @Override
+    public void changeState(String uuid, UsingState targetState) {
+        if (StringUtils.isBlank(uuid) || targetState == null) {
+            MallExceptionCast.cast(CommonsResultCode.INVALID_PARAM);
+        }
+        Optional<Brand> optional = getRepository().findById(uuid);
+        if (optional.isPresent() == false) {
+            MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
+        }
+        Brand brand = optional.get();
+        if ((UsingState.using.equals(targetState) && UsingState.using.equals(brand.getState())
+                || (UsingState.disabled.equals(targetState) && UsingState.disabled.equals(brand.getState())))) {
+            MallExceptionCast.cast(InvestResultCode.ENTITY_IS_EQUALS_TARGET_STATE);
+        }
+        brand.setState(targetState);
+        getRepository().save(brand);
+        saveOperationLog(uuid, UsingState.using.equals(targetState) ? "启用" : "停用");
+        doAfterSave(brand);
     }
 
     @Override
