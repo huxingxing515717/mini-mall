@@ -42,7 +42,7 @@ public interface CrudService<T extends IsEntity> {
      * @param uuids
      * @return
      */
-    Map<String, T> findAllByUuids(Set<String> uuids);
+    Map<String, T> findAllByIds(Set<String> uuids);
 
     /**
      * 根据关键字分页查询

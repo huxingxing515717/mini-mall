@@ -115,9 +115,9 @@ public class FloorController implements FloorApi {
             buildingUuids.add(floor.getBuildingUuid());
         });
         // 项目
-        Map<String, Store> storeMap = fetchParts.contains("store") ? storeService.findAllByUuids(storeUuids) : new HashMap<>();
+        Map<String, Store> storeMap = fetchParts.contains("store") ? storeService.findAllByIds(storeUuids) : new HashMap<>();
         // 楼宇
-        Map<String, Building> buildingMap = fetchParts.contains("building") ? buildingService.findAllByUuids(buildingUuids) : new HashMap<>();
+        Map<String, Building> buildingMap = fetchParts.contains("building") ? buildingService.findAllByIds(buildingUuids) : new HashMap<>();
         floors.stream().forEach(floor -> {
             floor.setStore(storeMap.get(floor.getStoreUuid()));
             floor.setBuilding(buildingMap.get(floor.getBuildingUuid()));

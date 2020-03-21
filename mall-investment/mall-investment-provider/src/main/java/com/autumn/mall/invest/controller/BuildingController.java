@@ -109,7 +109,7 @@ public class BuildingController implements BuildingApi {
         }
         if (fetchParts.contains("store")) {
             Set<String> storeUuids = buildings.stream().map(building -> building.getStoreUuid()).collect(Collectors.toSet());
-            Map<String, Store> storeMap = storeService.findAllByUuids(storeUuids);
+            Map<String, Store> storeMap = storeService.findAllByIds(storeUuids);
             buildings.stream().forEach(building -> building.setStore(storeMap.get(building.getStoreUuid())));
         }
     }

@@ -10,10 +10,12 @@ package com.autumn.mall.invest.model;
 import com.autumn.mall.account.model.Subject;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.model.IsEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -37,8 +39,7 @@ public class Contract implements IsEntity {
     @ApiModelProperty(value = "唯一标识", dataType = "String")
     private String uuid;
 
-    @NotBlank
-    @ApiModelProperty(value = "合同号，客户端的业务主键", dataType = "String", readOnly = true)
+    @ApiModelProperty(value = "合同号，客户端的业务主键", dataType = "String")
     private String serialNumber;
 
     @NotBlank
@@ -48,41 +49,48 @@ public class Contract implements IsEntity {
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @ApiModelProperty(value = "业务状态", dataType = "BizState")
-    private BizState bizState;
+    private BizState state;
 
     @NotBlank
-    @ApiModelProperty(value = "项目id", dataType = "String")
-    private String storeId;
+    @ApiModelProperty(value = "项目uuid", dataType = "String")
+    private String storeUuid;
 
     @NotBlank
-    @ApiModelProperty(value = "商户id", dataType = "String")
-    private String tenantId;
+    @ApiModelProperty(value = "商户uuid", dataType = "String")
+    private String tenantUuid;
 
     @NotBlank
-    @ApiModelProperty(value = "楼宇id", dataType = "String")
-    private String buildingId;
+    @ApiModelProperty(value = "楼宇uuid", dataType = "String")
+    private String buildingUuid;
 
     @NotBlank
-    @ApiModelProperty(value = "楼层id", dataType = "String")
-    private String floorId;
+    @ApiModelProperty(value = "楼层uuid", dataType = "String")
+    private String floorUuid;
 
     @NotBlank
-    @ApiModelProperty(value = "铺位id", dataType = "String")
-    private String positionId;
+    @ApiModelProperty(value = "铺位uuid", dataType = "String")
+    private String positionUuid;
 
     @NotBlank
-    @ApiModelProperty(value = "品牌id", dataType = "String")
-    private String brandId;
+    @ApiModelProperty(value = "品牌uuid", dataType = "String")
+    private String brandUuid;
 
     @NotBlank
-    @ApiModelProperty(value = "业态id", dataType = "String")
-    private String biztypeId;
+    @ApiModelProperty(value = "业态uuid", dataType = "String")
+    private String biztypeUuid;
 
+    /**
+     * 默认的json格式是'yyyy-MM-dd'T'HH:mm:ss.SSS’
+     */
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "起始日期", dataType = "Date")
     private Date beginDate;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "截止日期", dataType = "Date")
     private Date endDate;
 
@@ -91,8 +99,8 @@ public class Contract implements IsEntity {
     private BigDecimal monthRent;
 
     @NotBlank
-    @ApiModelProperty(value = "科目id", dataType = "String")
-    private String subjectId;
+    @ApiModelProperty(value = "科目uuid", dataType = "String")
+    private String subjectUuid;
 
     @NotNull
     @ApiModelProperty(value = "税率", dataType = "BigDecimal")

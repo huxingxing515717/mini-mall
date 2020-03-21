@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface SettleDetailService {
 
-    void saveAll(String contractId, List<SettleDetail> details);
+    void saveAll(String contractUuid, List<SettleDetail> details);
 
-    List<SettleDetail> findAllByContractId(String contractId);
+    List<SettleDetail> findAllByContractUuid(String contractUuid);
 }

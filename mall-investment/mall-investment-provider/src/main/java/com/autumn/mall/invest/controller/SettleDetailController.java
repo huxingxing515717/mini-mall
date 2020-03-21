@@ -32,7 +32,7 @@ public class SettleDetailController implements SettleDetailApi {
     private SettleDetailService settleDetailService;
 
     @Override
-    public ResponseResult<List<SettleDetail>> findAllByContractId(String contractId) {
-        return new ResponseResult(CommonsResultCode.SUCCESS, settleDetailService.findAllByContractId(contractId));
+    public ResponseResult<List<SettleDetail>> findAllByContractUuid(String contractUuid) {
+        return new ResponseResult(CommonsResultCode.SUCCESS, settleDetailService.findAllByContractUuid(contractUuid));
     }
 }

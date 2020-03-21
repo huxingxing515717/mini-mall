@@ -21,8 +21,8 @@ public interface ContractRepository extends BaseRepository<Contract> {
     /**
      * 根据铺位id查询所有合同
      *
-     * @param positionId
+     * @param positionUuid
      * @return
      */
-    List<Contract> findAllByPositionId(String positionId);
+    List<Contract> findAllByPositionUuid(String positionUuid);
 }

@@ -21,11 +21,11 @@ import java.util.List;
 public interface SettleDetailApi {
 
     /**
-     * 根据合同id查询该合同的结算明细
+     * 根据合同uuid查询该合同的结算明细
      *
-     * @param contractId
+     * @param contractUuid
      * @return
      */
-    @GetMapping("/{contractId}")
-    ResponseResult<List<SettleDetail>> findAllByContractId(@PathVariable("contractId") String contractId);
+    @GetMapping("/{contractUuid}")
+    ResponseResult<List<SettleDetail>> findAllByContractUuid(@PathVariable("contractUuid") String contractUuid);
 }

@@ -29,14 +29,14 @@ public class SettleDetailServiceImpl implements SettleDetailService {
 
     @Override
     @Transactional
-    public void saveAll(String contractId, List<SettleDetail> details) {
+    public void saveAll(String contractUuid, List<SettleDetail> details) {
         // 删掉再重新保存
-        settleDetailRepository.deleteByContractId(contractId);
+        settleDetailRepository.deleteByContractUuid(contractUuid);
         settleDetailRepository.saveAll(details);
     }
 
     @Override
-    public List<SettleDetail> findAllByContractId(String contractId) {
-        return settleDetailRepository.findAllByContractId(contractId);
+    public List<SettleDetail> findAllByContractUuid(String contractUuid) {
+        return settleDetailRepository.findAllByContractUuid(contractUuid);
     }
 }

@@ -69,6 +69,10 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
     @Override
     @Transactional
     public void deleteById(String uuid) {
+        boolean isExists = getRepository().existsById(uuid);
+        if (isExists == false) {
+            MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
+        }
         getRepository().deleteById(uuid);
         doAfterDeleted(uuid);
     }
@@ -90,7 +94,7 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
     }
 
     @Override
-    public Map<String, T> findAllByUuids(Set<String> uuids) {
+    public Map<String, T> findAllByIds(Set<String> uuids) {
         if (CollectionUtil.isEmpty(uuids)) {
             return new HashMap<>();
         }

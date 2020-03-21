@@ -31,7 +31,8 @@ public enum InvestResultCode implements ResultCode {
     FLOOR_IS_NOT_ALLOW_MODIFY(false, "10005", "楼层不允许修改！"),
     POSITION_IS_REPEAT(false, "10006", "同一铺位，合同期不允许交叉！"),
     ENTITY_IS_DISABLED(false, "10007", "已停用状态的资料，不允许修改！"),
-    ENTITY_IS_EQUALS_TARGET_STATE(false, "10008", "资料已经是目标状态，禁止重复操作！");
+    ENTITY_IS_EQUALS_TARGET_STATE(false, "10008", "资料已经是目标状态，禁止重复操作！"),
+    CONTRACT_IS_EFFECT(false, "10009", "合同是生效状态，不允许删除！");
 
     private boolean success;
     private String code;

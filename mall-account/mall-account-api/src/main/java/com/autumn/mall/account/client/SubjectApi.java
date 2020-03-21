@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Anbang713
  * @create 2020/3/15
@@ -30,6 +33,15 @@ public interface SubjectApi {
      */
     @GetMapping("/{uuid}")
     ResponseResult<Subject> findById(@PathVariable("uuid") String uuid);
+
+    /**
+     * 通过uuid集合批量查询
+     *
+     * @param uuids
+     * @return
+     */
+    @PostMapping("/all")
+    ResponseResult<Map<String, Subject>> findAllByIds(@RequestBody Set<String> uuids);
 
     /**
      * 根据查询定义查询

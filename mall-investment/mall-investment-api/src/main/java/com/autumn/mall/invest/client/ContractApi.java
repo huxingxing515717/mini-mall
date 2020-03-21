@@ -8,8 +8,8 @@
 package com.autumn.mall.invest.client;
 
 import com.autumn.mall.commons.model.QueryDefinition;
-import com.autumn.mall.commons.response.QueryResult;
 import com.autumn.mall.commons.response.ResponseResult;
+import com.autumn.mall.commons.response.SummaryQueryResult;
 import com.autumn.mall.invest.model.Contract;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,11 +25,11 @@ public interface ContractApi {
     /**
      * 根据id获取实体对象
      *
-     * @param id
+     * @param uuid
      * @return
      */
-    @GetMapping("/{id}")
-    ResponseResult<Contract> findById(@PathVariable("id") String id);
+    @GetMapping("/{uuid}")
+    ResponseResult<Contract> findById(@PathVariable("uuid") String uuid);
 
     /**
      * 根据查询定义查询
@@ -38,5 +38,5 @@ public interface ContractApi {
      * @return
      */
     @PostMapping("/query")
-    ResponseResult<QueryResult<Contract>> query(@RequestBody QueryDefinition definition);
+    ResponseResult<SummaryQueryResult<Contract>> query(@RequestBody QueryDefinition definition);
 }

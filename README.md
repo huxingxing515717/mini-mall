@@ -1,4 +1,4 @@
-# mini-mall
+# mini-mall (更新中……)
 
 ## 项目介绍
 

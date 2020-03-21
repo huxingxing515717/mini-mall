@@ -23,6 +23,7 @@ spring:
     show-sql: true
   jackson:
     default-property-inclusion: non_null #为null的数据不返回
+    time-zone: GMT+8
 eureka:
   client:
     service-url:

@@ -30,8 +30,8 @@ public class GoodsInboundSpecificationBuilder implements SpecificationBuilder {
         if ("keyword".equals(property)) {
             String pattern = "%" + value + "%";
             return cb.like(root.get("billNumber"), pattern);
-        } else if ("bizState".equals(property)) {
-            return cb.equal(root.get("bizState"), BizState.valueOf(value.toString()));
+        } else if ("state".equals(property)) {
+            return cb.equal(root.get("state"), BizState.valueOf(value.toString()));
         } else if ("warehouse".equals(property)) {
             return cb.equal(root.get("warehouse"), value);
         } else if ("goodsId".equals(property)) {

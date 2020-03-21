@@ -11,9 +11,6 @@ import com.autumn.mall.commons.service.CacheService;
 import com.autumn.mall.commons.service.CrudService;
 import com.autumn.mall.invest.model.Contract;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author Anbang713
  * @create 2020/3/16
@@ -21,11 +18,10 @@ import java.util.Map;
 public interface ContractService extends CrudService<Contract>, CacheService {
 
     /**
-     * 批量生效
+     * 生效合同
      *
-     * @param ids
-     * @return 返回生效失败的合同错误原因
+     * @param uuid
      */
-    Map<String, String> doEffect(List<String> ids);
+    void doEffect(String uuid);
 
 }

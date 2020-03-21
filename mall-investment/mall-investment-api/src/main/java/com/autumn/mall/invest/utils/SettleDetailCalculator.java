@@ -10,6 +10,7 @@ package com.autumn.mall.invest.utils;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.autumn.mall.commons.utils.DateRange;
+import com.autumn.mall.commons.utils.IdWorker;
 import com.autumn.mall.invest.model.Contract;
 import com.autumn.mall.invest.model.SettleDetail;
 import org.apache.commons.lang3.time.DateUtils;
@@ -33,7 +34,8 @@ public class SettleDetailCalculator {
         List<DateRange> dateRanges = splitContractDate(contract.getBeginDate(), contract.getEndDate());
         for (DateRange dateRange : dateRanges) {
             SettleDetail detail = new SettleDetail();
-            detail.setContractId(contract.getUuid());
+            detail.setUuid(new IdWorker().nextId());
+            detail.setContractUuid(contract.getUuid());
             detail.setBeginDate(dateRange.getBeginDate());
             detail.setEndDate(dateRange.getEndDate());
 
@@ -42,12 +44,14 @@ public class SettleDetailCalculator {
             Date tempEndDate = DateUtil.endOfMonth(dateRange.getEndDate());
             DateRange monthRange = new DateRange(tempBeginDate, tempEndDate);
 
+            BigDecimal days1 = BigDecimal.valueOf(dateRange.getDays());
+            BigDecimal days2 = BigDecimal.valueOf(monthRange.getDays());
             detail.setTotal(contract.getMonthRent()
-                    .multiply(BigDecimal.valueOf(dateRange.getDays()))
-                    .divide(BigDecimal.valueOf(monthRange.getDays()), 2, BigDecimal.ROUND_HALF_UP));
+                    .multiply(days1)
+                    .divide(days2, 2, BigDecimal.ROUND_HALF_UP));
             detail.setTax(detail.getTotal().multiply(contract.getTaxRate()).setScale(2, BigDecimal.ROUND_HALF_UP));
-            detail.setSubjectId(contract.getSubjectId());
-            detail.setTaxRate(contract.getTaxRate());
+            detail.setSubjectUuid(contract.getSubjectUuid());
+            detail.setSalesRate(contract.getSalesRate());
             details.add(detail);
         }
         return details;
@@ -61,7 +65,7 @@ public class SettleDetailCalculator {
         Date tempEndDate = DateUtil.endOfMonth(beginDate);
         while (DateUtils.truncatedCompareTo(tempEndDate, endDate, Calendar.DAY_OF_MONTH) < 0) {
             isMultiMonth = true;
-            DateRange dateRange = new DateRange(tempBeginDate, tempEndDate);
+            DateRange dateRange = new DateRange(DateUtil.beginOfDay(tempBeginDate), DateUtil.endOfDay(tempEndDate));
             dateRanges.add(dateRange);
 
             tempBeginDate = DateUtils.addDays(tempEndDate, 1);
@@ -69,17 +73,17 @@ public class SettleDetailCalculator {
         }
 
         if (isMultiMonth == false) {
-            DateRange dateRange = new DateRange(beginDate, endDate);
+            DateRange dateRange = new DateRange(DateUtil.beginOfDay(beginDate), DateUtil.endOfDay(endDate));
             dateRanges.add(dateRange);
         } else {
-            DateRange dateRange = new DateRange(tempBeginDate, endDate);
+            DateRange dateRange = new DateRange(DateUtil.beginOfDay(tempBeginDate), DateUtil.endOfDay(endDate));
             dateRanges.add(dateRange);
         }
         return dateRanges;
     }
 
     public static void main(String[] args) {
-        List<DateRange> dateRanges = splitContractDate(DateUtil.parse("2019-01-31"), DateUtil.parse("2019-12-01"));
+        List<DateRange> dateRanges = splitContractDate(DateUtil.parse("2019-08-31"), DateUtil.parse("2020-03-30"));
         System.out.println(JSONUtil.toJsonStr(dateRanges));
     }
 }

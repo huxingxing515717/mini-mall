@@ -122,11 +122,11 @@ public class PositionController implements PositionApi {
             floorUuids.add(position.getFloorUuid());
         });
         // 项目
-        Map<String, Store> storeMap = fetchParts.contains("store") ? storeService.findAllByUuids(storeUuids) : new HashMap<>();
+        Map<String, Store> storeMap = fetchParts.contains("store") ? storeService.findAllByIds(storeUuids) : new HashMap<>();
         // 楼宇
-        Map<String, Building> buildingMap = fetchParts.contains("building") ? buildingService.findAllByUuids(buildingUuids) : new HashMap<>();
+        Map<String, Building> buildingMap = fetchParts.contains("building") ? buildingService.findAllByIds(buildingUuids) : new HashMap<>();
         // 楼层
-        Map<String, Floor> floorMap = fetchParts.contains("floor") ? floorService.findAllByUuids(floorUuids) : new HashMap<>();
+        Map<String, Floor> floorMap = fetchParts.contains("floor") ? floorService.findAllByIds(floorUuids) : new HashMap<>();
         positions.stream().forEach(position -> {
             position.setStore(storeMap.get(position.getStoreUuid()));
             position.setBuilding(buildingMap.get(position.getBuildingUuid()));

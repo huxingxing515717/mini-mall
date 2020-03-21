@@ -8,9 +8,11 @@
 package com.autumn.mall.invest.model;
 
 import com.autumn.mall.commons.model.IsEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -37,14 +39,18 @@ public class SettleDetail implements IsEntity {
     private String uuid;
 
     @NotBlank
-    @ApiModelProperty(value = "合同id", dataType = "String")
-    private String contractId;
+    @ApiModelProperty(value = "合同uuid", dataType = "String")
+    private String contractUuid;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "结算起始日期", dataType = "Date")
     private Date beginDate;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "结算结束日期", dataType = "Date")
     private Date endDate;
 
@@ -57,10 +63,10 @@ public class SettleDetail implements IsEntity {
     private BigDecimal tax;
 
     @NotBlank
-    @ApiModelProperty(value = "科目id", dataType = "String")
-    private String subjectId;
+    @ApiModelProperty(value = "科目uuid", dataType = "String")
+    private String subjectUuid;
 
     @NotNull
-    @ApiModelProperty(value = "税率", dataType = "BigDecimal")
-    private BigDecimal taxRate;
+    @ApiModelProperty(value = "销售提成率", dataType = "BigDecimal")
+    private BigDecimal salesRate;
 }

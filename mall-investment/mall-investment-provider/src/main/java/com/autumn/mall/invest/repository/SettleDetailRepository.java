@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface SettleDetailRepository extends CrudRepository<SettleDetail, String> {
 
-    void deleteByContractId(String contractId);
+    void deleteByContractUuid(String contractUuid);
 
-    List<SettleDetail> findAllByContractId(String contractId);
+    List<SettleDetail> findAllByContractUuid(String contractUuid);
 }

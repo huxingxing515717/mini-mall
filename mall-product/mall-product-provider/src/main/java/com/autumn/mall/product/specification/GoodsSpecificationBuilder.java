@@ -27,7 +27,7 @@ public class GoodsSpecificationBuilder implements SpecificationBuilder {
 
     @Override
     public Predicate build(Root root, CriteriaQuery query, CriteriaBuilder cb, String property, Object value) {
-        if (value == null)
+        if (value == null || (value instanceof List && ((List) value).isEmpty()))
             return null;
         if ("keyword".equals(property)) {
             String pattern = "%" + value + "%";
