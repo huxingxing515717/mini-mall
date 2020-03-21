@@ -7,14 +7,16 @@
  */
 package com.autumn.mall.product.service;
 
+import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.service.CacheService;
 import com.autumn.mall.commons.service.CrudService;
+import com.autumn.mall.commons.service.SupportStateService;
 import com.autumn.mall.product.model.Goods;
 
 /**
  * @author Anbang713
  * @create 2020/3/15
  */
-public interface GoodsService extends CrudService<Goods>, CacheService {
+public interface GoodsService extends CrudService<Goods>, CacheService, SupportStateService<UsingState> {
 
 }

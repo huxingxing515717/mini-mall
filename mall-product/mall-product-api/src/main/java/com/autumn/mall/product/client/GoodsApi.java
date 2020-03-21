@@ -8,8 +8,8 @@
 package com.autumn.mall.product.client;
 
 import com.autumn.mall.commons.model.QueryDefinition;
-import com.autumn.mall.commons.response.QueryResult;
 import com.autumn.mall.commons.response.ResponseResult;
+import com.autumn.mall.commons.response.SummaryQueryResult;
 import com.autumn.mall.product.model.Goods;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,13 +23,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface GoodsApi {
 
     /**
-     * 根据id获取实体对象
+     * 根据uuid获取实体对象
      *
-     * @param id
+     * @param uuid
      * @return
      */
-    @GetMapping("/{id}")
-    ResponseResult<Goods> findById(@PathVariable("id") String id);
+    @GetMapping("/{uuid}")
+    ResponseResult<Goods> findById(@PathVariable("uuid") String uuid);
 
     /**
      * 根据查询定义查询
@@ -38,5 +38,5 @@ public interface GoodsApi {
      * @return
      */
     @PostMapping("/query")
-    ResponseResult<QueryResult<Goods>> query(@RequestBody QueryDefinition definition);
+    ResponseResult<SummaryQueryResult<Goods>> query(@RequestBody QueryDefinition definition);
 }

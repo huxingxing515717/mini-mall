@@ -7,21 +7,25 @@
  */
 package com.autumn.mall.product.controller;
 
-import com.autumn.mall.basis.client.OperationLogClient;
 import com.autumn.mall.commons.model.QueryDefinition;
+import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.response.QueryResult;
 import com.autumn.mall.commons.response.ResponseResult;
+import com.autumn.mall.commons.response.SummaryQueryResult;
 import com.autumn.mall.product.client.GoodsApi;
 import com.autumn.mall.product.model.Goods;
 import com.autumn.mall.product.service.GoodsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Anbang713
@@ -34,8 +38,6 @@ public class GoodsController implements GoodsApi {
 
     @Autowired
     private GoodsService goodsService;
-    @Autowired
-    private OperationLogClient operationLogClient;
 
     @PostMapping
     @ApiOperation(value = "新增或编辑商品", httpMethod = "POST")
@@ -48,17 +50,45 @@ public class GoodsController implements GoodsApi {
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
     @ApiImplicitParam(name = "uuid", value = "商品id", required = true, dataType = "String", paramType = "path")
-    public ResponseResult<Goods> findById(@PathVariable("id") String id) {
-        Goods entity = goodsService.findById(id);
-        entity.getOperationLogs().addAll(operationLogClient.findAllByEntityKey(goodsService.getCacheKeyPrefix() + id).getData());
+    public ResponseResult<Goods> findById(@PathVariable("id") String uuid) {
+        Goods entity = goodsService.findById(uuid);
         return new ResponseResult(CommonsResultCode.SUCCESS, entity);
+    }
+
+    @PutMapping("/{uuid}")
+    @ApiOperation(value = "改变实体状态", httpMethod = "PUT")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "uuid", value = "uuid", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "targetState", value = "目标状态", required = true, dataType = "String", paramType = "query")
+    })
+    public ResponseResult changeState(@PathVariable("uuid") String uuid, @RequestParam("targetState") String targetState) {
+        goodsService.changeState(uuid, UsingState.valueOf(targetState));
+        return new ResponseResult(CommonsResultCode.SUCCESS);
     }
 
     @Override
     @PostMapping("/query")
     @ApiOperation(value = "根据查询定义查询商品", httpMethod = "POST")
     @ApiImplicitParam(name = "definition", value = "查询定义", required = true, dataType = "QueryDefinition")
-    public ResponseResult<QueryResult<Goods>> query(@RequestBody QueryDefinition definition) {
-        return new ResponseResult(CommonsResultCode.SUCCESS, goodsService.query(definition));
+    public ResponseResult<SummaryQueryResult<Goods>> query(@RequestBody QueryDefinition definition) {
+        QueryResult<Goods> queryResult = goodsService.query(definition);
+        SummaryQueryResult summaryQueryResult = SummaryQueryResult.newInstance(queryResult);
+        summaryQueryResult.getSummary().putAll(querySummary(definition));
+        return new ResponseResult(CommonsResultCode.SUCCESS, summaryQueryResult);
+    }
+
+    private Map<String, Object> querySummary(QueryDefinition definition) {
+        Map<String, Object> result = new HashMap<>();
+        if (definition.isQuerySummary() == false) {
+            return result;
+        }
+        definition.setPageSize(1);
+        definition.getFilter().put("state", null);
+        result.put("all", goodsService.query(definition).getTotal());
+        definition.getFilter().put("state", UsingState.using.name());
+        result.put(UsingState.using.name(), goodsService.query(definition).getTotal());
+        definition.getFilter().put("state", UsingState.disabled.name());
+        result.put(UsingState.disabled.name(), goodsService.query(definition).getTotal());
+        return result;
     }
 }

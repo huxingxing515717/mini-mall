@@ -7,9 +7,8 @@
  */
 package com.autumn.mall.product.model;
 
-import com.autumn.mall.basis.model.OperationLog;
-import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.model.IsEntity;
+import com.autumn.mall.commons.model.UsingState;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,8 +16,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 商品
@@ -48,12 +45,9 @@ public class Goods implements IsEntity {
 
     @Enumerated(value = EnumType.STRING)
     @ApiModelProperty(value = "状态", dataType = "UsingState")
-    private UsingState usingState;
+    private UsingState state;
 
     @Length(max = 1024, message = "说明最大长度不超过64")
     @ApiModelProperty(value = "说明", dataType = "String")
     private String remark;
-
-    @Transient
-    private List<OperationLog> operationLogs = new ArrayList<>();
 }
