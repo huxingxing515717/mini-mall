@@ -25,7 +25,9 @@ import lombok.ToString;
 public enum AccountResultCode implements ResultCode {
 
     CODE_IS_EXISTS(false, "30001", "代码已存在，禁止操作！"),
-    CODE_IS_NOT_ALLOW_MODIFY(false, "30002", "代码不允许修改！");
+    CODE_IS_NOT_ALLOW_MODIFY(false, "30002", "代码不允许修改！"),
+    ENTITY_IS_DISABLED(false, "30003", "已停用状态的资料，不允许修改！"),
+    ENTITY_IS_EQUALS_TARGET_STATE(false, "30004", "资料已经是目标状态，禁止重复操作！");
 
     private boolean success;
     private String code;
