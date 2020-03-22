@@ -7,6 +7,7 @@
  */
 package com.autumn.mall.invest.service;
 
+import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
@@ -91,6 +92,6 @@ public class BizTypeServiceImpl extends AbstractServiceImpl<BizType> implements 
 
     @Override
     public String getCacheKeyPrefix() {
-        return "mall:invest:biztype:";
+        return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_BIZTYPE;
     }
 }

@@ -7,6 +7,7 @@
  */
 package com.autumn.mall.invest.service;
 
+import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.repository.OrderBuilder;
@@ -118,6 +119,6 @@ public class ContractServiceImpl extends AbstractServiceImpl<Contract> implement
 
     @Override
     public String getCacheKeyPrefix() {
-        return "mall:invest:contract:";
+        return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_CONTRACT;
     }
 }

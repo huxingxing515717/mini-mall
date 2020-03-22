@@ -11,6 +11,7 @@ import com.autumn.mall.account.model.Subject;
 import com.autumn.mall.account.repository.SubjectRepository;
 import com.autumn.mall.account.response.AccountResultCode;
 import com.autumn.mall.account.specification.SubjectSpecificationBuilder;
+import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
@@ -91,6 +92,6 @@ public class SubjectServiceImpl extends AbstractServiceImpl<Subject> implements 
 
     @Override
     public String getCacheKeyPrefix() {
-        return "mall:account:subject:";
+        return MallModuleKeyPrefixes.ACCOUNT_KEY_PREFIX_OF_SUBJECT;
     }
 }

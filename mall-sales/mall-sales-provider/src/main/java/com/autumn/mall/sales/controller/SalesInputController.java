@@ -10,7 +10,7 @@ package com.autumn.mall.sales.controller;
 import cn.hutool.core.collection.CollectionUtil;
 import com.autumn.mall.basis.api.StockInfo;
 import com.autumn.mall.basis.client.StockClient;
-import com.autumn.mall.commons.api.MallModuleKeyPrefixs;
+import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.model.QueryDefinition;
 import com.autumn.mall.commons.response.CommonsResultCode;
@@ -135,10 +135,10 @@ public class SalesInputController implements SalesInputApi {
 
     private void fetchWarehouseQty(List<SalesInputDetail> details) {
         List<String> entityKeys = new ArrayList<>();
-        details.stream().forEach(detail -> entityKeys.add(MallModuleKeyPrefixs.KEY_PREFIX_GOODS + detail.getGoodsUuid()));
+        details.stream().forEach(detail -> entityKeys.add(MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS + detail.getGoodsUuid()));
         Map<String, StockInfo> stockInfoMap = stockClient.findByEntityKeys(entityKeys).getData();
         details.stream().forEach(detail -> {
-            StockInfo stockInfo = stockInfoMap.get(MallModuleKeyPrefixs.KEY_PREFIX_GOODS + detail.getGoodsUuid());
+            StockInfo stockInfo = stockInfoMap.get(MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS + detail.getGoodsUuid());
             detail.setWarehouseQty(BigDecimal.ZERO);
             stockInfo.getWarehouseInfos().stream().forEach(warehouseInfo -> {
                 if (warehouseInfo.getWarehouse().equals(detail.getWarehouse())) {

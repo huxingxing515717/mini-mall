@@ -9,6 +9,7 @@ package com.autumn.mall.product.service;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.mq.Exchanges;
@@ -156,6 +157,6 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
 
     @Override
     public String getCacheKeyPrefix() {
-        return "mall:product:goodsinbound:";
+        return MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS_INBOUND;
     }
 }

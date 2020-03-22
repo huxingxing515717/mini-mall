@@ -7,6 +7,7 @@
  */
 package com.autumn.mall.product.service;
 
+import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
@@ -89,6 +90,6 @@ public class GoodsServiceImpl extends AbstractServiceImpl<Goods> implements Good
 
     @Override
     public String getCacheKeyPrefix() {
-        return "mall:product:goods:";
+        return MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS;
     }
 }

@@ -8,6 +8,7 @@
 package com.autumn.mall.sales.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.repository.BaseRepository;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
@@ -110,6 +111,6 @@ public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> imple
 
     @Override
     public String getCacheKeyPrefix() {
-        return "mall:sales:input:";
+        return MallModuleKeyPrefixes.SALES_KEY_PREFIX_OF_SALES_INPUT;
     }
 }
