@@ -15,7 +15,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author Anbang713
  * @create 2020/3/16
  */
-@FeignClient(name = "mall-investment-provider", path = "/settledetail")
+@FeignClient(name = "mall-investment-provider", contextId = "mall-investment-SettleDetailClient", path = "/settledetail")
 public interface SettleDetailClient extends SettleDetailApi {
 
 }

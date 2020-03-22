@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Anbang713
@@ -47,12 +48,20 @@ public class GoodsController implements GoodsApi {
     }
 
     @Override
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     @ApiOperation(value = "根据id获取实体对象", httpMethod = "GET")
     @ApiImplicitParam(name = "uuid", value = "商品id", required = true, dataType = "String", paramType = "path")
-    public ResponseResult<Goods> findById(@PathVariable("id") String uuid) {
+    public ResponseResult<Goods> findById(@PathVariable("uuid") String uuid) {
         Goods entity = goodsService.findById(uuid);
         return new ResponseResult(CommonsResultCode.SUCCESS, entity);
+    }
+
+    @Override
+    @PostMapping("/ids")
+    @ApiOperation(value = "根据ids获取实体对象", httpMethod = "POST")
+    @ApiImplicitParam(name = "uuids", value = "商品uuid集合", required = true, dataType = "List", paramType = "body")
+    public ResponseResult<Map<String, Goods>> findAllByIds(@RequestBody Set<String> uuids) {
+        return new ResponseResult(CommonsResultCode.SUCCESS, goodsService.findAllByIds(uuids));
     }
 
     @PutMapping("/{uuid}")

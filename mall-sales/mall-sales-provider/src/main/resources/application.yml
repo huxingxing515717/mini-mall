@@ -21,6 +21,10 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: non_null
 eureka:
   client:
     service-url:

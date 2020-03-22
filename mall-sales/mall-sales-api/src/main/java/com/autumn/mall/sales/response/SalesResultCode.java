@@ -27,7 +27,8 @@ public enum SalesResultCode implements ResultCode {
     CODE_IS_EXISTS(false, "20001", "代码已存在，禁止操作！"),
     CODE_IS_NOT_ALLOW_MODIFY(false, "20002", "代码不允许修改！"),
     ENTITY_IS_DISABLED(false, "20003", "已停用状态的资料，不允许修改！"),
-    ENTITY_IS_EQUALS_TARGET_STATE(false, "20004", "资料已经是目标状态，禁止重复操作！");
+    ENTITY_IS_EQUALS_TARGET_STATE(false, "20004", "资料已经是目标状态，禁止重复操作！"),
+    GOODS_DETAILS_IS_EMPTY(false, "30005", "商品明细不允许为空！");
 
     private boolean success;
     private String code;

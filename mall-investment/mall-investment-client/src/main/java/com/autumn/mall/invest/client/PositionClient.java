@@ -15,7 +15,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author Anbang713
  * @create 2020/3/15
  */
-@FeignClient(name = "mall-investment-provider", path = "/position")
+@FeignClient(name = "mall-investment-provider", contextId = "mall-investment-PositionClient", path = "/position")
 public interface PositionClient extends PositionApi {
 
 }

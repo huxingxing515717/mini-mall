@@ -15,7 +15,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author Anbang713
  * @create 2020/3/15
  */
-@FeignClient(name = "mall-investment-provider", path = "/building")
+@FeignClient(name = "mall-investment-provider", contextId = "mall-investment-BuildingClient", path = "/building")
 public interface BuildingClient extends BuildingApi {
 
 }

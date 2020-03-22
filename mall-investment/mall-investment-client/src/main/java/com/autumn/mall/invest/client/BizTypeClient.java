@@ -15,7 +15,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author Anbang713
  * @create 2020/3/15
  */
-@FeignClient(name = "mall-investment-provider", path = "/biztype")
+@FeignClient(name = "mall-investment-provider", contextId = "mall-investment-BizTypeClient", path = "/biztype")
 public interface BizTypeClient extends BizTypeApi {
 
 }

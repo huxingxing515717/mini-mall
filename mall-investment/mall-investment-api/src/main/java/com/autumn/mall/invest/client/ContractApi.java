@@ -11,10 +11,7 @@ import com.autumn.mall.commons.model.QueryDefinition;
 import com.autumn.mall.commons.response.ResponseResult;
 import com.autumn.mall.commons.response.SummaryQueryResult;
 import com.autumn.mall.invest.model.Contract;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Anbang713
@@ -29,7 +26,7 @@ public interface ContractApi {
      * @return
      */
     @GetMapping("/{uuid}")
-    ResponseResult<Contract> findById(@PathVariable("uuid") String uuid);
+    ResponseResult<Contract> findById(@PathVariable("uuid") String uuid, @RequestParam(value = "fetchPropertyInfo", required = false, defaultValue = "true") boolean fetchPropertyInfo);
 
     /**
      * 根据查询定义查询

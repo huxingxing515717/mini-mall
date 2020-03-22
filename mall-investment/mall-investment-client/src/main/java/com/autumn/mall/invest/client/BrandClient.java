@@ -15,7 +15,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author Anbang713
  * @create 2020/3/15
  */
-@FeignClient(name = "mall-investment-provider", path = "/brand")
+@FeignClient(name = "mall-investment-provider", contextId = "mall-investment-BrandClient", path = "/brand")
 public interface BrandClient extends BrandApi {
 
 }

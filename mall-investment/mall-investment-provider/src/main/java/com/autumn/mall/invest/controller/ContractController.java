@@ -21,6 +21,7 @@ import com.autumn.mall.invest.model.Tenant;
 import com.autumn.mall.invest.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -76,10 +77,15 @@ public class ContractController implements ContractApi {
     @Override
     @GetMapping("/{uuid}")
     @ApiOperation(value = "根据uuid获取实体对象", httpMethod = "GET")
-    @ApiImplicitParam(name = "uuid", value = "合同uuid", required = true, dataType = "String", paramType = "path")
-    public ResponseResult<Contract> findById(@PathVariable("uuid") String uuid) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "uuid", value = "合同uuid", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "fetchPropertyInfo", value = "获取属性信息", required = true, dataType = "Boolean", paramType = "query")
+    })
+    public ResponseResult<Contract> findById(@PathVariable("uuid") String uuid, @RequestParam(value = "fetchPropertyInfo", defaultValue = "true") boolean fetchPropertyInfo) {
         Contract contract = contractService.findById(uuid);
-        obtainContractInfo(contract);
+        if (fetchPropertyInfo) {
+            obtainContractInfo(contract);
+        }
         return new ResponseResult(CommonsResultCode.SUCCESS, contract);
     }
 
