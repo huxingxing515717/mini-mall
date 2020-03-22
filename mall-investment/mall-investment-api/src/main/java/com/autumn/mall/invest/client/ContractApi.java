@@ -7,33 +7,13 @@
  */
 package com.autumn.mall.invest.client;
 
-import com.autumn.mall.commons.model.QueryDefinition;
-import com.autumn.mall.commons.response.ResponseResult;
-import com.autumn.mall.commons.response.SummaryQueryResult;
+import com.autumn.mall.commons.client.ClientApi;
 import com.autumn.mall.invest.model.Contract;
-import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Anbang713
  * @create 2020/3/16
  */
-public interface ContractApi {
-
-    /**
-     * 根据id获取实体对象
-     *
-     * @param uuid
-     * @return
-     */
-    @GetMapping("/{uuid}")
-    ResponseResult<Contract> findById(@PathVariable("uuid") String uuid, @RequestParam(value = "fetchPropertyInfo", required = false, defaultValue = "true") boolean fetchPropertyInfo);
-
-    /**
-     * 根据查询定义查询
-     *
-     * @param definition
-     * @return
-     */
-    @PostMapping("/query")
-    ResponseResult<SummaryQueryResult<Contract>> query(@RequestBody QueryDefinition definition);
+public interface ContractApi extends ClientApi<Contract> {
+    
 }

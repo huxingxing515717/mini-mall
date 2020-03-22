@@ -15,7 +15,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author Anbang713
  * @create 2020/3/15
  */
-@FeignClient(name = "mall-account-provider", path = "/subject")
+@FeignClient(name = "mall-account-provider", contextId = "mall-account-SubjectClient", path = "/subject")
 public interface SubjectClient extends SubjectApi {
 
 }
