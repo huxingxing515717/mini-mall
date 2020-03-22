@@ -35,6 +35,8 @@ public class SettleDetailCalculator {
         for (DateRange dateRange : dateRanges) {
             SettleDetail detail = new SettleDetail();
             detail.setUuid(new IdWorker().nextId());
+            detail.setStoreUuid(contract.getStoreUuid());
+            detail.setTenantUuid(contract.getTenantUuid());
             detail.setContractUuid(contract.getUuid());
             detail.setBeginDate(dateRange.getBeginDate());
             detail.setEndDate(dateRange.getEndDate());
