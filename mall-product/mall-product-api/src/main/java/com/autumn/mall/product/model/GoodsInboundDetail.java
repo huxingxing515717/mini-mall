@@ -15,6 +15,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -36,17 +37,24 @@ public class GoodsInboundDetail implements IsEntity {
     private String uuid;
 
     @NotBlank
-    @ApiModelProperty(value = "入库单id", dataType = "String")
-    private String goodsInboundId;
+    @ApiModelProperty(value = "入库单uuid", dataType = "String")
+    private String goodsInboundUuid;
 
     @ApiModelProperty(value = "行号", dataType = "Integer")
     private int lineNumber;
 
     @NotBlank
-    @ApiModelProperty(value = "商品id", dataType = "String")
-    private String goodsId;
+    @ApiModelProperty(value = "商品uuid", dataType = "String")
+    private String goodsUuid;
 
     @NotNull
     @ApiModelProperty(value = "入库数量", dataType = "BigDecimal")
     private BigDecimal quantity;
+
+    @NotNull
+    @ApiModelProperty(value = "库存数量", dataType = "BigDecimal")
+    private BigDecimal warehouseQty;
+
+    @Transient
+    private Goods goods;
 }

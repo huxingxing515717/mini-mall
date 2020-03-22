@@ -229,18 +229,28 @@ public class RedisUtils {
     }
 
     /**
-     * 加锁
+     * 加锁，默认3min后释放锁
      *
      * @param key
      * @return
      */
     public boolean tryLock(String key) {
+        return tryLock(key, 3, TimeUnit.MINUTES);
+    }
+
+    /**
+     * 加锁
+     *
+     * @param key
+     * @return
+     */
+    public boolean tryLock(String key, int timeout, TimeUnit timeUnit) {
         try {
             long currTime = System.currentTimeMillis();
             // 加锁成功
             return redisTemplate.opsForValue().setIfAbsent(key, currTime);
         } finally {
-            redisTemplate.expire(key, 5, TimeUnit.SECONDS);
+            redisTemplate.expire(key, timeout, timeUnit);
         }
     }
 }

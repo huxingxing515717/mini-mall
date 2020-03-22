@@ -82,6 +82,7 @@ public class ContractServiceImpl extends AbstractServiceImpl<Contract> implement
         contractRepository.save(contract);
         // 生成结算明细
         settleDetailService.saveAll(contract.getUuid(), SettleDetailCalculator.calculate(contract));
+        saveOperationLog(uuid, "生效");
         // 刷新缓存
         doAfterSave(contract);
     }

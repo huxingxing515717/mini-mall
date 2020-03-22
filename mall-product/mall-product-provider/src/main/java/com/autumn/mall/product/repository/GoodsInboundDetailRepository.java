@@ -19,17 +19,17 @@ import java.util.List;
 public interface GoodsInboundDetailRepository extends CrudRepository<GoodsInboundDetail, String> {
 
     /**
-     * 根据入库单id查询，结果按行号升序返回
+     * 根据入库单uuid查询，结果按行号升序返回
      *
-     * @param goodsInboundId
+     * @param goodsInboundUuid
      * @return
      */
-    List<GoodsInboundDetail> findAllByGoodsInboundIdOrderByLineNumber(String goodsInboundId);
+    List<GoodsInboundDetail> findAllByGoodsInboundUuidOrderByLineNumber(String goodsInboundUuid);
 
     /**
-     * 删除指定入库单id下的所有明细
+     * 删除指定入库单uuid下的所有明细
      *
-     * @param goodsInboundId
+     * @param goodsInboundUuid
      */
-    void deleteByGoodsInboundId(String goodsInboundId);
+    void deleteByGoodsInboundUuid(String goodsInboundUuid);
 }

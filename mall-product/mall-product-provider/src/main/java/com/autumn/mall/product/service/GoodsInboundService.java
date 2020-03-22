@@ -13,7 +13,6 @@ import com.autumn.mall.product.model.GoodsInbound;
 import com.autumn.mall.product.model.GoodsInboundDetail;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Anbang713
@@ -24,16 +23,15 @@ public interface GoodsInboundService extends CrudService<GoodsInbound>, CacheSer
     /**
      * 根据入库单id查询，结果按行号升序返回
      *
-     * @param id
+     * @param uuid
      * @return
      */
-    List<GoodsInboundDetail> findDetailsByIdOrderByLineNumber(String id);
+    List<GoodsInboundDetail> findDetailsByIdOrderByLineNumber(String uuid);
 
     /**
-     * 批量生效
+     * 生效入库单
      *
-     * @param ids
-     * @return 返回生效失败的商品入库单错误原因
+     * @param uuid
      */
-    Map<String, String> doEffect(List<String> ids);
+    void doEffect(String uuid);
 }

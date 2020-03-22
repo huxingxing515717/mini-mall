@@ -7,7 +7,6 @@
  */
 package com.autumn.mall.product.model;
 
-import com.autumn.mall.basis.model.OperationLog;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.model.IsEntity;
 import io.swagger.annotations.ApiModel;
@@ -44,7 +43,7 @@ public class GoodsInbound implements IsEntity {
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @ApiModelProperty(value = "业务状态", dataType = "BizState")
-    private BizState bizState;
+    private BizState state;
 
     @NotNull
     @ApiModelProperty(value = "入库日期", dataType = "Date")
@@ -55,7 +54,7 @@ public class GoodsInbound implements IsEntity {
     private String warehouse;
 
     @ApiModelProperty(value = "商品id集合", dataType = "String")
-    private String goodsIds;
+    private String goodsUuids;
 
     @Length(max = 1024, message = "说明最大长度不超过64")
     @ApiModelProperty(value = "说明", dataType = "String")
@@ -64,6 +63,4 @@ public class GoodsInbound implements IsEntity {
     @Transient
     @ApiModelProperty(value = "入库明细")
     private List<GoodsInboundDetail> details = new ArrayList<>();
-    @Transient
-    private List<OperationLog> operationLogs = new ArrayList<>();
 }

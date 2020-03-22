@@ -24,6 +24,10 @@ import java.util.List;
 @NoArgsConstructor
 public class StockInfo {
 
+    public StockInfo(String entityKey) {
+        this.entityKey = entityKey;
+    }
+
     private String uuid;
 
     /**
@@ -34,7 +38,7 @@ public class StockInfo {
     /**
      * 实体对应各个仓库的库存总数量
      */
-    private BigDecimal quantity;
+    private BigDecimal quantity = BigDecimal.ZERO;
 
     /**
      * 每个仓库的库存信息

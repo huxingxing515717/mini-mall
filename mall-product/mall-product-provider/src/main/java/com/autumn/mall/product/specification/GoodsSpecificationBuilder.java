@@ -40,6 +40,8 @@ public class GoodsSpecificationBuilder implements SpecificationBuilder {
             } else {
                 return cb.equal(root.get("state"), UsingState.valueOf(value.toString()));
             }
+        } else if ("expects".equals(property)) {
+            return cb.not(root.get("uuid").in((List) value));
         }
         return null;
     }

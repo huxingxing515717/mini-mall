@@ -11,6 +11,7 @@ import com.autumn.mall.basis.model.Stock;
 import org.springframework.data.repository.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Anbang713
@@ -22,9 +23,9 @@ public interface StockRepository extends Repository<Stock, String> {
      * 新增库存或者减少库存
      *
      * @param entity
-     * @return 是否操作成功
+     * @return
      */
-    boolean save(Stock entity);
+    Stock save(Stock entity);
 
     /**
      * 通过实体标识查询库存信息
@@ -34,6 +35,8 @@ public interface StockRepository extends Repository<Stock, String> {
      */
     List<Stock> findAllByEntityKey(String entityKey);
 
+    List<Stock> findAllByEntityKeyIn(List<String> entityKeys);
+
     /**
      * 通过实体标识和仓库查询库存信息
      *
@@ -41,6 +44,5 @@ public interface StockRepository extends Repository<Stock, String> {
      * @param warehouse
      * @return
      */
-    Stock findByEntityKeyAndWarehouse(String entityKey, String warehouse);
-
+    Optional<Stock> findByEntityKeyAndWarehouse(String entityKey, String warehouse);
 }

@@ -60,9 +60,11 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
             actionName = "新建";
             entity.setUuid(new IdWorker().nextId());
         }
-        entity = getRepository().save(entity);
-        saveOperationLog(entity.getUuid(), actionName);
+        T result = getRepository().save(entity);
+        // 如果直接将result传入doAfterSave,会导致包含明细的实体丢失明细，比如商品入库单明细。
+        entity.setUuid(result.getUuid());
         doAfterSave(entity);
+        saveOperationLog(entity.getUuid(), actionName);
         return entity.getUuid();
     }
 
