@@ -70,6 +70,7 @@ public class StockServiceImpl implements StockService {
             return stockInfo;
         }
         Stock stock = optional.get();
+        stockInfo.setUuid(stock.getUuid());
         stockInfo.setQuantity(stock.getQuantity());
         stockInfo.getWarehouseInfos().add(new WarehouseInfo(warehouse, stock.getQuantity()));
         return stockInfo;

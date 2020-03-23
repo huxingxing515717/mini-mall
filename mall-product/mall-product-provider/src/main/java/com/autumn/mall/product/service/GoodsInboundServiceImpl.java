@@ -52,8 +52,6 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
     @Autowired
     private GoodsInboundSpecificationBuilder specificationBuilder;
     @Autowired
-    private GoodsService goodsService;
-    @Autowired
     private RedisUtils redisUtils;
     @Autowired
     private RabbitMQUtils rabbitMQUtils;
@@ -88,7 +86,7 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
         List<GoodsInboundDetail> details = goodsInboundDetailRepository.findAllByGoodsInboundUuidOrderByLineNumber(entity.getUuid());
         details.stream().forEach(detail -> {
             Map<String, String> msg = new HashMap<>();
-            msg.put("entityKey", goodsService.getCacheKeyPrefix() + detail.getGoodsUuid());
+            msg.put("entityKey", MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS + detail.getGoodsUuid());
             msg.put("warehouse", entity.getWarehouse());
             msg.put("quantity", detail.getQuantity().toString());
             rabbitMQUtils.sendMsg(Exchanges.MALL_PRODUCT_PROVIDER_EXCHANGE, RoutingKeys.STOCK_UPDATED, msg);
