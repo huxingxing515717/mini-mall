@@ -24,4 +24,9 @@ public interface Exchanges {
      * 商品微服务
      */
     String MALL_PRODUCT_PROVIDER_EXCHANGE = "mini-mall.product.provider";
+
+    /**
+     * 销售微服务
+     */
+    String MALL_SALES_PROVIDER_EXCHANGE = "mini-mall.sales.provider";
 }
