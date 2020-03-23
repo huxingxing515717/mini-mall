@@ -59,6 +59,7 @@ public abstract class AbstractController<T extends IsEntity> implements ClientAp
         if (fetchPropertyInfo) {
             fetchParts(Arrays.asList(entity), getDefaultParts());
         }
+        doAfterLoad(entity);
         return new ResponseResult(CommonsResultCode.SUCCESS, entity);
     }
 
@@ -83,6 +84,10 @@ public abstract class AbstractController<T extends IsEntity> implements ClientAp
         SummaryQueryResult summaryQueryResult = SummaryQueryResult.newInstance(queryResult);
         summaryQueryResult.getSummary().putAll(querySummary(definition));
         return new ResponseResult(CommonsResultCode.SUCCESS, summaryQueryResult);
+    }
+
+    protected void doAfterLoad(T entity) {
+        // do nothing
     }
 
     protected List<String> getDefaultParts() {

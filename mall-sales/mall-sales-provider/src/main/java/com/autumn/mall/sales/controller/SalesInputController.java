@@ -16,6 +16,12 @@ import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.response.ResponseResult;
 import com.autumn.mall.commons.service.CrudService;
+import com.autumn.mall.invest.client.ContractClient;
+import com.autumn.mall.invest.client.StoreClient;
+import com.autumn.mall.invest.client.TenantClient;
+import com.autumn.mall.invest.model.Contract;
+import com.autumn.mall.invest.model.Store;
+import com.autumn.mall.invest.model.Tenant;
 import com.autumn.mall.product.client.GoodsClient;
 import com.autumn.mall.product.model.Goods;
 import com.autumn.mall.sales.client.SalesInputApi;
@@ -24,10 +30,12 @@ import com.autumn.mall.sales.model.SalesInputDetail;
 import com.autumn.mall.sales.service.SalesInputService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -49,6 +57,12 @@ public class SalesInputController extends AbstractController<SalesInput> impleme
     private GoodsClient goodsClient;
     @Autowired
     private StockClient stockClient;
+    @Autowired
+    private StoreClient storeClient;
+    @Autowired
+    private TenantClient tenantClient;
+    @Autowired
+    private ContractClient contractClient;
 
     @Override
     public CrudService<SalesInput> getCrudService() {
@@ -61,24 +75,17 @@ public class SalesInputController extends AbstractController<SalesInput> impleme
     }
 
     @Override
-    @GetMapping("/{uuid}")
-    @ApiOperation(value = "根据uuid获取实体对象", httpMethod = "GET")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "uuid", value = "uuid", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "fetchPropertyInfo", value = "是否获取实体相关联的其它实体完整信息，默认为true", required = true, dataType = "Boolean", paramType = "query")
-    })
-    public ResponseResult<SalesInput> findById(@PathVariable("uuid") String uuid, @RequestParam(value = "fetchPropertyInfo", defaultValue = "true") boolean fetchPropertyInfo) {
-        SalesInput entity = salesInputService.findById(uuid);
+    protected void doAfterLoad(SalesInput entity) {
+        super.doAfterLoad(entity);
         // 如果details不为空，那就是从redis缓存中取出来的，我们不处理。
         if (CollectionUtil.isEmpty(entity.getDetails())) {
-            entity.setDetails(salesInputService.findDetailsByUuid(uuid));
+            entity.setDetails(salesInputService.findDetailsByUuid(entity.getUuid()));
             fetchGoods(entity.getDetails());
         }
         // 如果是未生效，实时获取库存数量
         if (entity.getState().equals(BizState.ineffect)) {
             fetchWarehouseQty(entity.getDetails());
         }
-        return new ResponseResult(CommonsResultCode.SUCCESS, entity);
     }
 
     @PutMapping("/{uuid}")
@@ -93,6 +100,25 @@ public class SalesInputController extends AbstractController<SalesInput> impleme
         if (records.isEmpty() || fetchParts.isEmpty()) {
             return;
         }
+        Set<String> storeUuids = new HashSet<>();
+        Set<String> tenantUuids = new HashSet<>();
+        Set<String> contractUuids = new HashSet<>();
+        records.stream().forEach(record -> {
+            storeUuids.add(record.getStoreUuid());
+            tenantUuids.add(record.getTenantUuid());
+            contractUuids.add(record.getContractUuid());
+        });
+        // 项目
+        Map<String, Store> storeMap = fetchParts.contains("store") ? storeClient.findAllByIds(storeUuids).getData() : new HashMap<>();
+        // 商户
+        Map<String, Tenant> tenantMap = fetchParts.contains("tenant") ? tenantClient.findAllByIds(tenantUuids).getData() : new HashMap<>();
+        // 合同
+        Map<String, Contract> contractMap = fetchParts.contains("contract") ? contractClient.findAllByIds(contractUuids).getData() : new HashMap<>();
+        records.stream().forEach(record -> {
+            record.setStore(storeMap.get(record.getStoreUuid()));
+            record.setTenant(tenantMap.get(record.getTenantUuid()));
+            record.setContract(contractMap.get(record.getContractUuid()));
+        });
     }
 
     private void fetchWarehouseQty(List<SalesInputDetail> details) {
