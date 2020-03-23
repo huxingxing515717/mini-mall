@@ -7,6 +7,8 @@
  */
 package com.autumn.mall.invest.service;
 
+import com.autumn.mall.commons.model.QueryDefinition;
+import com.autumn.mall.commons.response.QueryResult;
 import com.autumn.mall.invest.model.SettleDetail;
 
 import java.util.List;
@@ -20,4 +22,12 @@ public interface SettleDetailService {
     void saveAll(String contractUuid, List<SettleDetail> details);
 
     List<SettleDetail> findAllByContractUuid(String contractUuid);
+
+    /**
+     * 根据关键字分页查询
+     *
+     * @param definition
+     * @return
+     */
+    QueryResult<SettleDetail> query(QueryDefinition definition);
 }

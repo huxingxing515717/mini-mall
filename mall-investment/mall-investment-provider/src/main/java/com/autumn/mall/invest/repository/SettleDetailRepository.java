@@ -7,8 +7,8 @@
  */
 package com.autumn.mall.invest.repository;
 
+import com.autumn.mall.commons.repository.BaseRepository;
 import com.autumn.mall.invest.model.SettleDetail;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * @author Anbang713
  * @create 2020/3/16
  */
-public interface SettleDetailRepository extends CrudRepository<SettleDetail, String> {
+public interface SettleDetailRepository extends BaseRepository<SettleDetail> {
 
     void deleteByContractUuid(String contractUuid);
 

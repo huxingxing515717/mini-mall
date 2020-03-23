@@ -31,6 +31,7 @@ public interface MallModuleKeyPrefixes {
      * 账务微服务
      */
     String ACCOUNT_KEY_PREFIX_OF_SUBJECT = "mall:account:subject:";
+    String ACCOUNT_KEY_PREFIX_OF_STATEMENT = "mall:account:statement:";
 
     /**
      * 招商微服务

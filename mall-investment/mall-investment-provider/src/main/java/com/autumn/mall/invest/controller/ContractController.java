@@ -7,8 +7,6 @@
  */
 package com.autumn.mall.invest.controller;
 
-import com.autumn.mall.account.client.SubjectClient;
-import com.autumn.mall.account.model.Subject;
 import com.autumn.mall.commons.controller.AbstractController;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.response.CommonsResultCode;
@@ -53,8 +51,6 @@ public class ContractController extends AbstractController<Contract> implements 
     private BrandService brandService;
     @Autowired
     private BizTypeService bizTypeService;
-    @Autowired
-    private SubjectClient subjectClient;
 
     @Override
     public CrudService<Contract> getCrudService() {
@@ -112,8 +108,6 @@ public class ContractController extends AbstractController<Contract> implements 
         Map<String, Brand> brandMap = fetchParts.contains("brand") ? brandService.findAllByIds(brandUuids) : new HashMap<>();
         // 业态
         Map<String, BizType> bizTypeMap = fetchParts.contains("bizType") ? bizTypeService.findAllByIds(bizTypeUuids) : new HashMap<>();
-        // 科目
-        Map<String, Subject> subjectMap = fetchParts.contains("subject") ? subjectClient.findAllByIds(subjectUuids).getData() : new HashMap<>();
         contracts.stream().forEach(contract -> {
             contract.setStore(storeMap.get(contract.getStoreUuid()));
             contract.setTenant(tenantMap.get(contract.getTenantUuid()));
@@ -121,7 +115,6 @@ public class ContractController extends AbstractController<Contract> implements 
             contract.setPosition(positionMap.get(contract.getPositionUuid()));
             contract.setBrand(brandMap.get(contract.getBrandUuid()));
             contract.setBizType(bizTypeMap.get(contract.getBiztypeUuid()));
-            contract.setSubject(subjectMap.get(contract.getSubjectUuid()));
         });
     }
 }

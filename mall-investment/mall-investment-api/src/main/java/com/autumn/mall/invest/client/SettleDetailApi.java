@@ -7,10 +7,15 @@
  */
 package com.autumn.mall.invest.client;
 
+import com.autumn.mall.commons.model.QueryDefinition;
+import com.autumn.mall.commons.response.QueryResult;
 import com.autumn.mall.commons.response.ResponseResult;
+import com.autumn.mall.commons.response.SummaryQueryResult;
 import com.autumn.mall.invest.model.SettleDetail;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -28,4 +33,13 @@ public interface SettleDetailApi {
      */
     @GetMapping("/{contractUuid}")
     ResponseResult<List<SettleDetail>> findAllByContractUuid(@PathVariable("contractUuid") String contractUuid);
+
+    /**
+     * 根据查询定义查询
+     *
+     * @param definition 查询定义
+     * @return
+     */
+    @PostMapping("/query")
+    ResponseResult<SummaryQueryResult<SettleDetail>> query(@RequestBody QueryDefinition definition);
 }

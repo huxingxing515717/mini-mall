@@ -53,6 +53,7 @@ public class SettleDetailCalculator {
                     .divide(days2, 2, BigDecimal.ROUND_HALF_UP));
             detail.setTax(detail.getTotal().multiply(contract.getTaxRate()).setScale(2, BigDecimal.ROUND_HALF_UP));
             detail.setSubjectUuid(contract.getSubjectUuid());
+            detail.setTaxRate(contract.getTaxRate());
             detail.setSalesRate(contract.getSalesRate());
             details.add(detail);
         }

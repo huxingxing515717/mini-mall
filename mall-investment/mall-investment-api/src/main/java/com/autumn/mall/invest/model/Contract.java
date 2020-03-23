@@ -7,7 +7,6 @@
  */
 package com.autumn.mall.invest.model;
 
-import com.autumn.mall.account.model.Subject;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.model.IsEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -129,6 +128,4 @@ public class Contract implements IsEntity {
     private Brand brand;
     @Transient
     private BizType bizType;
-    @Transient
-    private Subject subject;
 }

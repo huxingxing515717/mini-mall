@@ -10,6 +10,7 @@ package com.autumn.mall.account;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -22,6 +23,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableSwagger2
+@EnableFeignClients({"com.autumn.mall.invest.client"})
 @ComponentScan(basePackages = {"com.autumn.mall.commons", "com.autumn.mall.account"})
 public class AccountProviderApplication {
 
