@@ -15,7 +15,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author Anbang713
  * @create 2020/3/15
  */
-@FeignClient(name = "mall-sales-provider", path = "/paymenttype")
+@FeignClient(name = "mall-sales-provider", contextId = "mall-sales-PaymentTypeClient", path = "/paymenttype")
 public interface PaymentTypeClient extends PaymentTypeApi {
 
 }

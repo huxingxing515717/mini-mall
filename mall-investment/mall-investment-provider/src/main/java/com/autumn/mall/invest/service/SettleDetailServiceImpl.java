@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 结算明细业务层接口
@@ -39,6 +36,11 @@ public class SettleDetailServiceImpl implements SettleDetailService {
 
     @Autowired
     private SettleDetailRepository settleDetailRepository;
+
+    @Override
+    public Boolean existsNoStatement(String contractUuid, Date beginDate) {
+        return settleDetailRepository.existsByContractUuidAndStatementUuidAndEndDateBefore(contractUuid, SettleDetail.NONE_STATEMENT, beginDate);
+    }
 
     @Override
     @Transactional

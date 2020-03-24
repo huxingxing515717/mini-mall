@@ -8,15 +8,12 @@
 package com.autumn.mall.invest.client;
 
 import com.autumn.mall.commons.model.QueryDefinition;
-import com.autumn.mall.commons.response.QueryResult;
 import com.autumn.mall.commons.response.ResponseResult;
 import com.autumn.mall.commons.response.SummaryQueryResult;
 import com.autumn.mall.invest.model.SettleDetail;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,6 +30,16 @@ public interface SettleDetailApi {
      */
     @GetMapping("/{contractUuid}")
     ResponseResult<List<SettleDetail>> findAllByContractUuid(@PathVariable("contractUuid") String contractUuid);
+
+    /**
+     * 查找指定合同在某个日期前是否有未出账的数据
+     *
+     * @param contractUuid 合同uuid
+     * @param beginDate    起始日期
+     * @return
+     */
+    @GetMapping("/{contractUuid}/check")
+    ResponseResult<Boolean> existsNoStatement(@PathVariable("contractUuid") String contractUuid, @RequestParam("beginDate") Date beginDate);
 
     /**
      * 根据查询定义查询

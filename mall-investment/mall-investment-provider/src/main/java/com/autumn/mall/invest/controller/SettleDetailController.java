@@ -23,6 +23,7 @@ import com.autumn.mall.invest.service.StoreService;
 import com.autumn.mall.invest.service.TenantService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,17 @@ public class SettleDetailController implements SettleDetailApi {
     @ApiImplicitParam(name = "contractUuid", value = "合同uuid", required = true, dataType = "String", paramType = "path")
     public ResponseResult<List<SettleDetail>> findAllByContractUuid(@PathVariable("contractUuid") String contractUuid) {
         return new ResponseResult(CommonsResultCode.SUCCESS, settleDetailService.findAllByContractUuid(contractUuid));
+    }
+
+    @Override
+    @GetMapping("/{contractUuid}/check")
+    @ApiOperation(value = "查找指定合同在某个日期前是否有未出账的数据", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "contractUuid", value = "合同uuid", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "beginDate", value = "起始日期", required = true, dataType = "Date", paramType = "query")
+    })
+    public ResponseResult<Boolean> existsNoStatement(@PathVariable("contractUuid") String contractUuid, @RequestParam("beginDate") Date beginDate) {
+        return new ResponseResult(CommonsResultCode.SUCCESS, settleDetailService.existsNoStatement(contractUuid, beginDate));
     }
 
     @Override

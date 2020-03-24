@@ -18,6 +18,7 @@ import com.autumn.mall.commons.repository.BaseRepository;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
+import com.autumn.mall.commons.utils.DateRange;
 import com.autumn.mall.commons.utils.IdWorker;
 import com.autumn.mall.commons.utils.RabbitMQUtils;
 import com.autumn.mall.commons.utils.RedisUtils;
@@ -31,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -59,6 +61,25 @@ public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> imple
     @Override
     public List<SalesInputDetail> findDetailsByUuid(String uuid) {
         return salesInputDetailRepository.findAllByInputUuidOrderByLineNumber(uuid);
+    }
+
+    @Override
+    public BigDecimal getTotalByContract(String contractUuid, DateRange dateRange) {
+        if (StringUtils.isBlank(contractUuid) || dateRange == null) {
+            MallExceptionCast.cast(CommonsResultCode.INVALID_PARAM);
+        }
+        BigDecimal result = BigDecimal.ZERO;
+        if (dateRange.getBeginDate() != null && dateRange.getEndDate() == null) {
+            result = salesInputDetailRepository.summaryTotalByBeginDate(contractUuid, dateRange.getBeginDate());
+        } else if (dateRange.getBeginDate() == null && dateRange.getEndDate() != null) {
+            result = salesInputDetailRepository.summaryTotalByEndDate(contractUuid, dateRange.getEndDate());
+        } else if (dateRange.getBeginDate() != null && dateRange.getEndDate() != null) {
+            result = salesInputDetailRepository.summaryTotalByDateRange(contractUuid, dateRange.getBeginDate(), dateRange.getEndDate());
+        }
+        if (result == null) {
+            result = BigDecimal.ZERO;
+        }
+        return result;
     }
 
     @Override

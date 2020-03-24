@@ -74,14 +74,6 @@ public class Statement implements IsEntity {
     @ApiModelProperty(value = "起始日期", dataType = "Date")
     private Date accountDate;
 
-    @NotBlank
-    @ApiModelProperty(value = "科目uuid", dataType = "String")
-    private String subjectUuid;
-
-    @NotNull
-    @ApiModelProperty(value = "科目税率", dataType = "BigDecimal")
-    private BigDecimal taxRate;
-
     @NotNull
     @ApiModelProperty(value = "销售提成率", dataType = "BigDecimal")
     private BigDecimal salesRate;

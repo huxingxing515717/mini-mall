@@ -16,6 +16,7 @@ import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.response.ResponseResult;
 import com.autumn.mall.commons.service.CrudService;
+import com.autumn.mall.commons.utils.DateRange;
 import com.autumn.mall.invest.client.ContractClient;
 import com.autumn.mall.invest.client.StoreClient;
 import com.autumn.mall.invest.client.TenantClient;
@@ -30,12 +31,10 @@ import com.autumn.mall.sales.model.SalesInputDetail;
 import com.autumn.mall.sales.service.SalesInputService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -94,6 +93,17 @@ public class SalesInputController extends AbstractController<SalesInput> impleme
     public ResponseResult doEffect(@PathVariable("uuid") String uuid) {
         salesInputService.doEffect(uuid);
         return new ResponseResult(CommonsResultCode.SUCCESS);
+    }
+
+    @Override
+    @PostMapping("/{contractUuid}/total")
+    @ApiOperation(value = "查询指定合同和时间范围内的销售总额", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "contractUuid", value = "合同uuid", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "dateRange", value = "时间段", required = true, dataType = "DateRange", paramType = "body")
+    })
+    public ResponseResult<BigDecimal> getTotalByContract(@PathVariable("contractUuid") String contractUuid, @RequestBody DateRange dateRange) {
+        return new ResponseResult(CommonsResultCode.SUCCESS, salesInputService.getTotalByContract(contractUuid, dateRange));
     }
 
     public void fetchParts(List<SalesInput> records, List<String> fetchParts) {

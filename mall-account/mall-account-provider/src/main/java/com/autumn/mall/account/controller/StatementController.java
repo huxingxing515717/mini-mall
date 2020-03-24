@@ -20,16 +20,15 @@ import com.autumn.mall.invest.client.ContractClient;
 import com.autumn.mall.invest.client.StoreClient;
 import com.autumn.mall.invest.client.TenantClient;
 import com.autumn.mall.invest.model.Contract;
+import com.autumn.mall.invest.model.SettleDetail;
 import com.autumn.mall.invest.model.Store;
 import com.autumn.mall.invest.model.Tenant;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 
 /**
@@ -66,6 +65,13 @@ public class StatementController extends AbstractController<Statement> implement
     public ResponseResult doEffect(@PathVariable("uuid") String uuid) {
         statementService.doEffect(uuid);
         return new ResponseResult(CommonsResultCode.SUCCESS);
+    }
+
+    @PostMapping("/settle")
+    @ApiOperation(value = "出账", httpMethod = "POST")
+    @ApiImplicitParam(name = "settleDetails", value = "实体类", required = true)
+    public ResponseResult<Map<String, String>> doSettle(@Valid @RequestBody List<SettleDetail> settleDetails) {
+        return new ResponseResult(CommonsResultCode.SUCCESS, statementService.settle(settleDetails));
     }
 
     @Override

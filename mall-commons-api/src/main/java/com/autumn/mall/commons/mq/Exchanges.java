@@ -29,4 +29,9 @@ public interface Exchanges {
      * 销售微服务
      */
     String MALL_SALES_PROVIDER_EXCHANGE = "mini-mall.sales.provider";
+
+    /**
+     * 财务微服务
+     */
+    String MALL_ACCOUNT_PROVIDER_EXCHANGE = "mini-mall.account.provider";
 }

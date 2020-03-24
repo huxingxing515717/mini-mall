@@ -11,8 +11,10 @@ import com.autumn.mall.account.model.Statement;
 import com.autumn.mall.account.model.StatementDetail;
 import com.autumn.mall.commons.service.CacheService;
 import com.autumn.mall.commons.service.CrudService;
+import com.autumn.mall.invest.model.SettleDetail;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Anbang713
@@ -41,4 +43,12 @@ public interface StatementService extends CrudService<Statement>, CacheService {
      * @param uuid
      */
     void doPay(String uuid);
+
+    /**
+     * 出账，按项目+商户+合同进行分组
+     *
+     * @param settleDetails 合同结算明细
+     * @return 出账情况
+     */
+    Map<String, String> settle(List<SettleDetail> settleDetails);
 }

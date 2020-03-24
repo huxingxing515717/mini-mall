@@ -10,6 +10,7 @@ package com.autumn.mall.invest.repository;
 import com.autumn.mall.commons.repository.BaseRepository;
 import com.autumn.mall.invest.model.SettleDetail;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,4 +22,6 @@ public interface SettleDetailRepository extends BaseRepository<SettleDetail> {
     void deleteByContractUuid(String contractUuid);
 
     List<SettleDetail> findAllByContractUuid(String contractUuid);
+
+    boolean existsByContractUuidAndStatementUuidAndEndDateBefore(String contractUuid, String statementUuid, Date beginDate);
 }

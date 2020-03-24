@@ -17,4 +17,9 @@ public interface RoutingKeys {
      * 更新商品库存
      */
     String STOCK_UPDATED = "stockUpdated";
+
+    /**
+     * 出账成功
+     */
+    String SETTLE_SUCCESSFUL = "settleSuccessful";
 }

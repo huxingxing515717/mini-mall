@@ -11,6 +11,7 @@ import com.autumn.mall.commons.model.QueryDefinition;
 import com.autumn.mall.commons.response.QueryResult;
 import com.autumn.mall.invest.model.SettleDetail;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,8 +27,17 @@ public interface SettleDetailService {
     /**
      * 根据关键字分页查询
      *
-     * @param definition
+     * @param definition 查询定义
      * @return
      */
     QueryResult<SettleDetail> query(QueryDefinition definition);
+
+    /**
+     * 查找指定合同在某个日期前是否有未出账的数据
+     *
+     * @param contractUuid 合同uuid
+     * @param beginDate    起始日期
+     * @return
+     */
+    Boolean existsNoStatement(String contractUuid, Date beginDate);
 }

@@ -7,6 +7,7 @@
  */
 package com.autumn.mall.commons.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class RedisUtils {
+
+    public static final String LOCK_TAG = "lock:";
 
     @Autowired
     private RedisTemplate redisTemplate;// 不带事务
@@ -235,7 +238,18 @@ public class RedisUtils {
      * @return
      */
     public boolean tryLock(String key) {
-        return tryLock(key, 3, TimeUnit.MINUTES);
+        return tryLock(key, null);
+    }
+
+    /**
+     * 加锁，默认3min后释放锁
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    public boolean tryLock(String key, String value) {
+        return tryLock(key, value, 3, TimeUnit.MINUTES);
     }
 
     /**
@@ -244,11 +258,14 @@ public class RedisUtils {
      * @param key
      * @return
      */
-    public boolean tryLock(String key, int timeout, TimeUnit timeUnit) {
+    public boolean tryLock(String key, String value, int timeout, TimeUnit timeUnit) {
         try {
-            long currTime = System.currentTimeMillis();
-            // 加锁成功
-            return redisTemplate.opsForValue().setIfAbsent(key, currTime);
+            if (StringUtils.isBlank(value)) {
+                long currTime = System.currentTimeMillis();
+                // 加锁成功
+                return redisTemplate.opsForValue().setIfAbsent(key, currTime);
+            }
+            return redisTemplate.opsForValue().setIfAbsent(key, value);
         } finally {
             redisTemplate.expire(key, timeout, timeUnit);
         }

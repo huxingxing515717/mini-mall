@@ -64,10 +64,18 @@ public class StatementDetail implements IsEntity {
     private BigDecimal tax;
 
     @NotNull
+    @ApiModelProperty(value = "本次销售提成税额", dataType = "BigDecimal")
+    private BigDecimal salesTax;
+
+    @NotNull
     @ApiModelProperty(value = "本次销售提成总额", dataType = "BigDecimal")
     private BigDecimal salesTotal;
 
+    @NotBlank
+    @ApiModelProperty(value = "科目uuid", dataType = "String")
+    private String subjectUuid;
+
     @NotNull
-    @ApiModelProperty(value = "本次销售提成税额", dataType = "BigDecimal")
-    private BigDecimal salesTax;
+    @ApiModelProperty(value = "科目税率", dataType = "BigDecimal")
+    private BigDecimal taxRate;
 }
