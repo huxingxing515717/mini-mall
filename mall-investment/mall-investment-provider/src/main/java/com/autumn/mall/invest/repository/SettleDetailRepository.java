@@ -24,4 +24,6 @@ public interface SettleDetailRepository extends BaseRepository<SettleDetail> {
     List<SettleDetail> findAllByContractUuid(String contractUuid);
 
     boolean existsByContractUuidAndStatementUuidAndEndDateBefore(String contractUuid, String statementUuid, Date beginDate);
+
+    List<SettleDetail> findAllByStatementUuid(String statementUuid);
 }

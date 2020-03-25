@@ -35,13 +35,14 @@ import java.util.Map;
 @Component
 public class SettleDetailConsumer {
 
-    private static final String QUERY_NAME = "mini-mall.invest.settledetail.queue";
+    private static final String SETTLE_SUCCESSFUL_QUEUE = "mini-mall.invest.settleSuccessful.queue";
+    private static final String STATEMENT_DELETED_QUEUE = "mini-mall.invest.statementDeleted.queue";
 
     @Autowired
     private SettleDetailRepository settleDetailRepository;
 
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(value = QUERY_NAME, durable = "true"),
+            value = @Queue(value = SETTLE_SUCCESSFUL_QUEUE, durable = "true"),
             exchange = @Exchange(value = Exchanges.MALL_ACCOUNT_PROVIDER_EXCHANGE,
                     ignoreDeclarationExceptions = "true"),
             key = {RoutingKeys.SETTLE_SUCCESSFUL}))
@@ -59,5 +60,20 @@ public class SettleDetailConsumer {
         });
         settleDetailRepository.saveAll(details);
         log.info("账单uuid回写成功");
+    }
+
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = STATEMENT_DELETED_QUEUE, durable = "true"),
+            exchange = @Exchange(value = Exchanges.MALL_ACCOUNT_PROVIDER_EXCHANGE,
+                    ignoreDeclarationExceptions = "true"),
+            key = {RoutingKeys.STATEMENT_DELETED}))
+    public void statementDeleted(Map<String, String> msg) throws Exception {
+        JSONObject jsonObject = JSONUtil.parseFromMap(msg);
+        log.info("接收到来自：" + Exchanges.MALL_ACCOUNT_PROVIDER_EXCHANGE + "的账单删除消息，消息体：" + jsonObject.toString());
+        String statementUuid = jsonObject.getStr("statementUuid");
+        List<SettleDetail> details = settleDetailRepository.findAllByStatementUuid(statementUuid);
+        details.stream().forEach(detail -> detail.setStatementUuid(SettleDetail.NONE_STATEMENT));
+        settleDetailRepository.saveAll(details);
+        log.info("合同结算明细已经恢复出账");
     }
 }

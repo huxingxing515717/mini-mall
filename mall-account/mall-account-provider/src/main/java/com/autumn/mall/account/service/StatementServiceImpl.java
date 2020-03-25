@@ -8,6 +8,7 @@
 package com.autumn.mall.account.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
 import com.autumn.mall.account.commons.PayState;
 import com.autumn.mall.account.model.Statement;
@@ -15,14 +16,17 @@ import com.autumn.mall.account.model.StatementDetail;
 import com.autumn.mall.account.order.StatementOrderBuilder;
 import com.autumn.mall.account.repository.StatementDetailRepository;
 import com.autumn.mall.account.repository.StatementRepository;
+import com.autumn.mall.account.response.AccountResultCode;
 import com.autumn.mall.account.specification.StatementSpecificationBuilder;
 import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
+import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.mq.Exchanges;
 import com.autumn.mall.commons.mq.RoutingKeys;
 import com.autumn.mall.commons.repository.BaseRepository;
 import com.autumn.mall.commons.repository.OrderBuilder;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
+import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
 import com.autumn.mall.commons.utils.DateRange;
 import com.autumn.mall.commons.utils.IdWorker;
@@ -96,8 +100,29 @@ public class StatementServiceImpl extends AbstractServiceImpl<Statement> impleme
     }
 
     @Override
-    public void doEffect(String uuid) {
+    public void doAfterDeleted(String uuid) {
+        statementDetailRepository.deleteByStatementUuid(uuid);
+        super.doAfterDeleted(uuid);
+        Map<String, String> params = new HashMap<>();
+        params.put("statementUuid", uuid);
+        rabbitMQUtils.sendMsg(Exchanges.MALL_ACCOUNT_PROVIDER_EXCHANGE, RoutingKeys.STATEMENT_DELETED, params);
+    }
 
+    @Override
+    public void doEffect(String uuid) {
+        Optional<Statement> optional = statementRepository.findById(uuid);
+        if (optional.isPresent() == false) {
+            MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
+        }
+        if (optional.get().getState().equals(BizState.effect)) {
+            MallExceptionCast.cast(AccountResultCode.ENTITY_IS_EQUALS_TARGET_STATE);
+        }
+        Statement entity = optional.get();
+        entity.setState(BizState.effect);
+        getRepository().save(entity);
+        saveOperationLog(uuid, "生效");
+        // 更新缓存
+        redisUtils.set(getCacheKeyPrefix() + entity.getUuid(), entity, RandomUtil.randomLong(3600, 86400));
     }
 
     @Override
@@ -121,7 +146,6 @@ public class StatementServiceImpl extends AbstractServiceImpl<Statement> impleme
         Iterator<String> iterator = detailMap.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
-            detailMap.get(key).stream().sorted((o1, o2) -> DateUtils.truncatedCompareTo(o1.getBeginDate(), o2.getBeginDate(), Calendar.DAY_OF_MONTH));
             // 对键进行分割
             String[] keys = StringUtils.split(key, "_");
 
@@ -135,7 +159,8 @@ public class StatementServiceImpl extends AbstractServiceImpl<Statement> impleme
                 resultMap.put(key, e.getMessage());
                 continue;
             }
-            List<SettleDetail> details = detailMap.get(key);
+            List<SettleDetail> details = detailMap.get(key).stream().sorted((o1, o2) ->
+                    DateUtils.truncatedCompareTo(o1.getBeginDate(), o2.getBeginDate(), Calendar.DAY_OF_MONTH)).collect(Collectors.toList());
             // 只有当前最小的日期前面的结算周期都已经出过账才允许出账
             if (settleDetailClient.existsNoStatement(contractUuid, details.get(0).getBeginDate()).getData()) {
                 resultMap.put(key, "请先对历史结算明细进行出账！");

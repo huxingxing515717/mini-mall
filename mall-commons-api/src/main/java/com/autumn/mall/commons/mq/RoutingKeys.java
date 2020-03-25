@@ -22,4 +22,9 @@ public interface RoutingKeys {
      * 出账成功
      */
     String SETTLE_SUCCESSFUL = "settleSuccessful";
+
+    /**
+     * 账单删除
+     */
+    String STATEMENT_DELETED = "statementDeleted";
 }
