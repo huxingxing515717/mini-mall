@@ -10,7 +10,10 @@ package com.autumn.mall.account.controller;
 import cn.hutool.core.collection.CollectionUtil;
 import com.autumn.mall.account.client.StatementApi;
 import com.autumn.mall.account.model.Statement;
+import com.autumn.mall.account.model.StatementDetail;
+import com.autumn.mall.account.model.Subject;
 import com.autumn.mall.account.service.StatementService;
+import com.autumn.mall.account.service.SubjectService;
 import com.autumn.mall.commons.controller.AbstractController;
 import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.response.CommonsResultCode;
@@ -49,6 +52,8 @@ public class StatementController extends AbstractController<Statement> implement
     private TenantClient tenantClient;
     @Autowired
     private ContractClient contractClient;
+    @Autowired
+    private SubjectService subjectService;
 
     @Override
     protected void doAfterLoad(Statement entity) {
@@ -57,6 +62,7 @@ public class StatementController extends AbstractController<Statement> implement
         if (CollectionUtil.isEmpty(entity.getDetails())) {
             entity.setDetails(statementService.findDetailsByUuid(entity.getUuid()));
         }
+        fetchSubjects(entity.getDetails());
     }
 
     @PutMapping("/{uuid}")
@@ -107,5 +113,12 @@ public class StatementController extends AbstractController<Statement> implement
             record.setTenant(tenantMap.get(record.getTenantUuid()));
             record.setContract(contractMap.get(record.getContractUuid()));
         });
+    }
+
+    private void fetchSubjects(List<StatementDetail> details) {
+        Set<String> subjectUuids = new HashSet<>();
+        details.stream().forEach(detail -> subjectUuids.add(detail.getSubjectUuid()));
+        Map<String, Subject> subjectMap = subjectService.findAllByIds(subjectUuids);
+        details.stream().forEach(detail -> detail.setSubject(subjectMap.get(detail.getSubjectUuid())));
     }
 }
