@@ -91,7 +91,7 @@ public class TenantServiceImpl extends AbstractServiceImpl<Tenant> implements Te
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_TENANT;
     }
 }

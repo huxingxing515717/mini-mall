@@ -91,7 +91,7 @@ public class BrandServiceImpl extends AbstractServiceImpl<Brand> implements Bran
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_BRAND;
     }
 }

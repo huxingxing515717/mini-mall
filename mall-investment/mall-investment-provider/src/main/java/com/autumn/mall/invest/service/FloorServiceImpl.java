@@ -104,7 +104,7 @@ public class FloorServiceImpl extends AbstractServiceImpl<Floor> implements Floo
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_FLOOR;
     }
 }

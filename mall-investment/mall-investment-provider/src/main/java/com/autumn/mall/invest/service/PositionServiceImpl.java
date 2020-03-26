@@ -107,7 +107,7 @@ public class PositionServiceImpl extends AbstractServiceImpl<Position> implement
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_POSITION;
     }
 }

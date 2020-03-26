@@ -91,7 +91,7 @@ public class PaymentTypeServiceImpl extends AbstractServiceImpl<PaymentType> imp
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.SALES_KEY_PREFIX_OF_PAYMENT_TYPE;
     }
 }

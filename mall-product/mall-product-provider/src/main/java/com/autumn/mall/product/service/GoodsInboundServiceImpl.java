@@ -43,8 +43,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> implements GoodsInboundService {
 
-    private static final String EFFECT_LOCK = "effectLock:";
-
     @Autowired
     private GoodsInboundRepository goodsInboundRepository;
     @Autowired
@@ -64,16 +62,16 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
     @Override
     public void doEffect(String uuid) {
         // TODO 生效后，商品入库，涉及分布式事务
-        Optional<GoodsInbound> optional = goodsInboundRepository.findById(uuid);
-        if (optional.isPresent() == false) {
-            MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
-        }
         try {
-            while (redisUtils.tryLock(getCacheKeyPrefix() + EFFECT_LOCK + uuid) == false) {
+            while (redisUtils.tryLock(getLockKeyPrefix() + uuid) == false) {
                 TimeUnit.SECONDS.sleep(3);
             }
         } catch (Exception e) {
             MallExceptionCast.cast(CommonsResultCode.TRY_LOCKED_ERROR);
+        }
+        Optional<GoodsInbound> optional = goodsInboundRepository.findById(uuid);
+        if (optional.isPresent() == false) {
+            MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
         }
         if (optional.get().getState().equals(BizState.effect)) {
             MallExceptionCast.cast(ProductResultCode.ENTITY_IS_EQUALS_TARGET_STATE);
@@ -92,10 +90,10 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
             rabbitMQUtils.sendMsg(Exchanges.MALL_PRODUCT_PROVIDER_EXCHANGE, RoutingKeys.STOCK_UPDATED, msg);
         });
         // 删除分布式锁
-        redisUtils.remove(getCacheKeyPrefix() + EFFECT_LOCK + uuid);
+        redisUtils.remove(getLockKeyPrefix() + uuid);
         saveOperationLog(uuid, "生效");
         // 更新缓存，key的过期时间为1天
-        redisUtils.set(getCacheKeyPrefix() + entity.getUuid(), entity, RandomUtil.randomLong(3600, 86400));
+        redisUtils.set(getModuleKeyPrefix() + entity.getUuid(), entity, RandomUtil.randomLong(3600, 86400));
     }
 
     @Override
@@ -154,7 +152,7 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS_INBOUND;
     }
 }

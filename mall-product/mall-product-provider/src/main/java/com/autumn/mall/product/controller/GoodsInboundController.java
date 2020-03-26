@@ -116,10 +116,10 @@ public class GoodsInboundController {
 
     private void fetchWarehouseQty(String warehouse, List<GoodsInboundDetail> details) {
         List<String> entityKeys = new ArrayList<>();
-        details.stream().forEach(detail -> entityKeys.add(goodsService.getCacheKeyPrefix() + detail.getGoodsUuid()));
+        details.stream().forEach(detail -> entityKeys.add(goodsService.getModuleKeyPrefix() + detail.getGoodsUuid()));
         Map<String, StockInfo> stockInfoMap = stockClient.findByEntityKeys(entityKeys).getData();
         details.stream().forEach(detail -> {
-            StockInfo stockInfo = stockInfoMap.get(goodsService.getCacheKeyPrefix() + detail.getGoodsUuid());
+            StockInfo stockInfo = stockInfoMap.get(goodsService.getModuleKeyPrefix() + detail.getGoodsUuid());
             detail.setWarehouseQty(BigDecimal.ZERO);
             stockInfo.getWarehouseInfos().stream().forEach(warehouseInfo -> {
                 if (warehouseInfo.getWarehouse().equals(warehouse)) {

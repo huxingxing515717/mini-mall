@@ -101,7 +101,7 @@ public class BuildingServiceImpl extends AbstractServiceImpl<Building> implement
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_BUILDING;
     }
 }

@@ -91,7 +91,7 @@ public class StoreServiceImpl extends AbstractServiceImpl<Store> implements Stor
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_STORE;
     }
 }

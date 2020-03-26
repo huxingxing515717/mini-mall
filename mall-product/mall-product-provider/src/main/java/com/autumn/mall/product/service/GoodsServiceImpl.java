@@ -89,7 +89,7 @@ public class GoodsServiceImpl extends AbstractServiceImpl<Goods> implements Good
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS;
     }
 }

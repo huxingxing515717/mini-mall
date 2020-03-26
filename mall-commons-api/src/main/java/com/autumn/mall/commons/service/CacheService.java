@@ -15,5 +15,10 @@ package com.autumn.mall.commons.service;
  */
 public interface CacheService {
 
-    String getCacheKeyPrefix();
+    /**
+     * 获取模块的key前缀常量定义，可选值{@link com.autumn.mall.commons.api.MallModuleKeyPrefixes}
+     *
+     * @return
+     */
+    String getModuleKeyPrefix();
 }

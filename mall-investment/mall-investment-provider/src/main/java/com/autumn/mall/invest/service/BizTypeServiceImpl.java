@@ -91,7 +91,7 @@ public class BizTypeServiceImpl extends AbstractServiceImpl<BizType> implements 
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_BIZTYPE;
     }
 }

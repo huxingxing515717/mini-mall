@@ -198,8 +198,12 @@ public abstract class AbstractServiceImpl<T extends IsEntity> implements CrudSer
         redisUtils.remove(getCacheKey(uuid));
     }
 
+    public String getLockKeyPrefix() {
+        return getModuleKeyPrefix() + RedisUtils.LOCK_TAG;
+    }
+
     private String getCacheKey(String uuid) {
-        return getCacheKeyPrefix() + uuid;
+        return getModuleKeyPrefix() + uuid;
     }
 
     public abstract BaseRepository<T> getRepository();

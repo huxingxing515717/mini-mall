@@ -91,7 +91,7 @@ public class SubjectServiceImpl extends AbstractServiceImpl<Subject> implements 
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.ACCOUNT_KEY_PREFIX_OF_SUBJECT;
     }
 }

@@ -45,8 +45,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> implements SalesInputService {
 
-    private static final String EFFECT_LOCK = "effectLock:";
-
     @Autowired
     private SalesInputRepository salesInputRepository;
     @Autowired
@@ -86,16 +84,16 @@ public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> imple
     public void doEffect(String uuid) {
 // TODO 生效后，商品出库，涉及分布式事务
 //  （这里还有一个问题就是明细可能存在商品一致、仓库一致、销售数量都没超过库存数量，但是加起来就有可能超过了）
-        Optional<SalesInput> optional = salesInputRepository.findById(uuid);
-        if (optional.isPresent() == false) {
-            MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
-        }
         try {
-            while (redisUtils.tryLock(getCacheKeyPrefix() + EFFECT_LOCK + uuid) == false) {
+            while (redisUtils.tryLock(getLockKeyPrefix() + uuid) == false) {
                 TimeUnit.SECONDS.sleep(3);
             }
         } catch (Exception e) {
             MallExceptionCast.cast(CommonsResultCode.TRY_LOCKED_ERROR);
+        }
+        Optional<SalesInput> optional = salesInputRepository.findById(uuid);
+        if (optional.isPresent() == false) {
+            MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
         }
         if (optional.get().getState().equals(BizState.effect)) {
             MallExceptionCast.cast(SalesResultCode.ENTITY_IS_EQUALS_TARGET_STATE);
@@ -114,10 +112,10 @@ public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> imple
             rabbitMQUtils.sendMsg(Exchanges.MALL_SALES_PROVIDER_EXCHANGE, RoutingKeys.STOCK_UPDATED, msg);
         });
         // 删除分布式锁
-        redisUtils.remove(getCacheKeyPrefix() + EFFECT_LOCK + uuid);
+        redisUtils.remove(getLockKeyPrefix() + uuid);
         saveOperationLog(uuid, "生效");
         // 更新缓存
-        redisUtils.set(getCacheKeyPrefix() + entity.getUuid(), entity, RandomUtil.randomLong(3600, 86400));
+        redisUtils.set(getModuleKeyPrefix() + entity.getUuid(), entity, RandomUtil.randomLong(3600, 86400));
     }
 
     @Override
@@ -176,7 +174,7 @@ public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> imple
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.SALES_KEY_PREFIX_OF_SALES_INPUT;
     }
 }

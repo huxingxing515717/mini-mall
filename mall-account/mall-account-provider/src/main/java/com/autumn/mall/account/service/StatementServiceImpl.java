@@ -122,7 +122,7 @@ public class StatementServiceImpl extends AbstractServiceImpl<Statement> impleme
         getRepository().save(entity);
         saveOperationLog(uuid, "生效");
         // 更新缓存
-        redisUtils.set(getCacheKeyPrefix() + entity.getUuid(), entity, RandomUtil.randomLong(3600, 86400));
+        redisUtils.set(getModuleKeyPrefix() + entity.getUuid(), entity, RandomUtil.randomLong(3600, 86400));
     }
 
     @Override
@@ -236,7 +236,7 @@ public class StatementServiceImpl extends AbstractServiceImpl<Statement> impleme
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.ACCOUNT_KEY_PREFIX_OF_STATEMENT;
     }
 }

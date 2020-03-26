@@ -118,7 +118,7 @@ public class ContractServiceImpl extends AbstractServiceImpl<Contract> implement
     }
 
     @Override
-    public String getCacheKeyPrefix() {
+    public String getModuleKeyPrefix() {
         return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_CONTRACT;
     }
 }
