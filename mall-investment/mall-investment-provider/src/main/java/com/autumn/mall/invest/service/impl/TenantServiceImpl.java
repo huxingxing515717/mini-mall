@@ -1,11 +1,11 @@
 /**
  * 版权所有 (C), 2019-2020, XXX有限公司
  * 项目名：com.autumn.mall.invest.service
- * 文件名: BrandServiceImpl
- * 日期: 2020/3/15 15:32
+ * 文件名: TenantServiceImpl
+ * 日期: 2020/3/15 16:06
  * 说明:
  */
-package com.autumn.mall.invest.service;
+package com.autumn.mall.invest.service.impl;
 
 import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
@@ -13,10 +13,11 @@ import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
-import com.autumn.mall.invest.model.Brand;
-import com.autumn.mall.invest.repository.BrandRepository;
+import com.autumn.mall.invest.model.Tenant;
+import com.autumn.mall.invest.repository.TenantRepository;
 import com.autumn.mall.invest.response.InvestResultCode;
-import com.autumn.mall.invest.specification.BrandSpecificationBuilder;
+import com.autumn.mall.invest.service.TenantService;
+import com.autumn.mall.invest.specification.TenantSpecificationBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,24 +25,24 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * 品牌业务层接口实现
+ * 商户业务层接口实现
  *
  * @author Anbang713
  * @create 2020/3/15
  */
 @Service
-public class BrandServiceImpl extends AbstractServiceImpl<Brand> implements BrandService {
+public class TenantServiceImpl extends AbstractServiceImpl<Tenant> implements TenantService {
 
     @Autowired
-    private BrandRepository brandRepository;
+    private TenantRepository tenantRepository;
     @Autowired
-    private BrandSpecificationBuilder specificationBuilder;
+    private TenantSpecificationBuilder specificationBuilder;
 
     @Override
-    protected void doBeforeSave(Brand entity) {
+    protected void doBeforeSave(Tenant entity) {
         super.doBeforeSave(entity);
-        // 不允许存在代码重复的项目
-        Optional<Brand> optional = brandRepository.findByCode(entity.getCode());
+        // 不允许存在代码重复的商户
+        Optional<Tenant> optional = tenantRepository.findByCode(entity.getCode());
         if (optional.isPresent()) {
             if (entity.getUuid() == null || entity.getUuid().equals(optional.get().getUuid()) == false) {
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
@@ -53,8 +54,8 @@ public class BrandServiceImpl extends AbstractServiceImpl<Brand> implements Bran
         }
         // 如果是编辑，则代码不允许修改
         if (StringUtils.isNotBlank(entity.getUuid())) {
-            Brand store = findById(entity.getUuid());
-            if (store.getCode().equals(entity.getCode()) == false) {
+            Tenant tenant = findById(entity.getUuid());
+            if (tenant.getCode().equals(entity.getCode()) == false) {
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_NOT_ALLOW_MODIFY);
             }
         }
@@ -65,24 +66,24 @@ public class BrandServiceImpl extends AbstractServiceImpl<Brand> implements Bran
         if (StringUtils.isBlank(uuid) || targetState == null) {
             MallExceptionCast.cast(CommonsResultCode.INVALID_PARAM);
         }
-        Optional<Brand> optional = getRepository().findById(uuid);
+        Optional<Tenant> optional = getRepository().findById(uuid);
         if (optional.isPresent() == false) {
             MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
         }
-        Brand brand = optional.get();
-        if ((UsingState.using.equals(targetState) && UsingState.using.equals(brand.getState())
-                || (UsingState.disabled.equals(targetState) && UsingState.disabled.equals(brand.getState())))) {
+        Tenant entity = optional.get();
+        if ((UsingState.using.equals(targetState) && UsingState.using.equals(entity.getState())
+                || (UsingState.disabled.equals(targetState) && UsingState.disabled.equals(entity.getState())))) {
             MallExceptionCast.cast(InvestResultCode.ENTITY_IS_EQUALS_TARGET_STATE);
         }
-        brand.setState(targetState);
-        getRepository().save(brand);
+        entity.setState(targetState);
+        getRepository().save(entity);
         saveOperationLog(uuid, UsingState.using.equals(targetState) ? "启用" : "停用");
-        doAfterSave(brand);
+        doAfterSave(entity);
     }
 
     @Override
-    public BrandRepository getRepository() {
-        return brandRepository;
+    public TenantRepository getRepository() {
+        return tenantRepository;
     }
 
     @Override
@@ -92,6 +93,6 @@ public class BrandServiceImpl extends AbstractServiceImpl<Brand> implements Bran
 
     @Override
     public String getModuleKeyPrefix() {
-        return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_BRAND;
+        return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_TENANT;
     }
 }

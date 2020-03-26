@@ -1,22 +1,25 @@
 /**
  * 版权所有 (C), 2019-2020, XXX有限公司
  * 项目名：com.autumn.mall.invest.service
- * 文件名: StoreServiceImpl
- * 日期: 2020/3/14 19:51
+ * 文件名: BuildingServiceImpl
+ * 日期: 2020/3/15 13:12
  * 说明:
  */
-package com.autumn.mall.invest.service;
+package com.autumn.mall.invest.service.impl;
 
 import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.UsingState;
+import com.autumn.mall.commons.repository.OrderBuilder;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
-import com.autumn.mall.invest.model.Store;
-import com.autumn.mall.invest.repository.StoreRepository;
+import com.autumn.mall.invest.model.Building;
+import com.autumn.mall.invest.order.BuildingOrderBuilder;
+import com.autumn.mall.invest.repository.BuildingRepository;
 import com.autumn.mall.invest.response.InvestResultCode;
-import com.autumn.mall.invest.specification.StoreSpecificationBuilder;
+import com.autumn.mall.invest.service.BuildingService;
+import com.autumn.mall.invest.specification.BuildingSpecificationBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,24 +27,24 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * 项目业务层接口实现
+ * 楼宇业务层接口实现
  *
  * @author Anbang713
- * @create 2020/3/14
+ * @create 2020/3/15
  */
 @Service
-public class StoreServiceImpl extends AbstractServiceImpl<Store> implements StoreService {
+public class BuildingServiceImpl extends AbstractServiceImpl<Building> implements BuildingService {
 
     @Autowired
-    private StoreRepository storeRepository;
+    private BuildingRepository buildingRepository;
     @Autowired
-    private StoreSpecificationBuilder specificationBuilder;
+    private BuildingSpecificationBuilder specificationBuilder;
 
     @Override
-    protected void doBeforeSave(Store entity) {
+    protected void doBeforeSave(Building entity) {
         super.doBeforeSave(entity);
-        // 不允许存在代码重复的项目
-        Optional<Store> optional = storeRepository.findByCode(entity.getCode());
+        // 同一项目下，不允许存在代码重复的楼宇
+        Optional<Building> optional = buildingRepository.findByStoreUuidAndCode(entity.getStoreUuid(), entity.getCode());
         if (optional.isPresent()) {
             if (entity.getUuid() == null || entity.getUuid().equals(optional.get().getUuid()) == false) {
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
@@ -51,10 +54,13 @@ public class StoreServiceImpl extends AbstractServiceImpl<Store> implements Stor
                 MallExceptionCast.cast(InvestResultCode.ENTITY_IS_DISABLED);
             }
         }
-        // 如果是编辑，则代码不允许修改
+        // 如果是编辑，则项目和代码都不允许修改
         if (StringUtils.isNotBlank(entity.getUuid())) {
-            Store store = findById(entity.getUuid());
-            if (store.getCode().equals(entity.getCode()) == false) {
+            Building building = findById(entity.getUuid());
+            if (building.getStoreUuid().equals(entity.getStoreUuid()) == false) {
+                MallExceptionCast.cast(InvestResultCode.STORE_IS_NOT_ALLOW_MODIFY);
+            }
+            if (building.getCode().equals(entity.getCode()) == false) {
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_NOT_ALLOW_MODIFY);
             }
         }
@@ -65,24 +71,24 @@ public class StoreServiceImpl extends AbstractServiceImpl<Store> implements Stor
         if (StringUtils.isBlank(uuid) || targetState == null) {
             MallExceptionCast.cast(CommonsResultCode.INVALID_PARAM);
         }
-        Optional<Store> optional = storeRepository.findById(uuid);
+        Optional<Building> optional = buildingRepository.findById(uuid);
         if (optional.isPresent() == false) {
             MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
         }
-        Store store = optional.get();
-        if ((UsingState.using.equals(targetState) && UsingState.using.equals(store.getState())
-                || (UsingState.disabled.equals(targetState) && UsingState.disabled.equals(store.getState())))) {
+        Building building = optional.get();
+        if ((UsingState.using.equals(targetState) && UsingState.using.equals(building.getState())
+                || (UsingState.disabled.equals(targetState) && UsingState.disabled.equals(building.getState())))) {
             MallExceptionCast.cast(InvestResultCode.ENTITY_IS_EQUALS_TARGET_STATE);
         }
-        store.setState(targetState);
-        storeRepository.save(store);
+        building.setState(targetState);
+        buildingRepository.save(building);
         saveOperationLog(uuid, UsingState.using.equals(targetState) ? "启用" : "停用");
-        doAfterSave(store);
+        doAfterSave(building);
     }
 
     @Override
-    public StoreRepository getRepository() {
-        return storeRepository;
+    public BuildingRepository getRepository() {
+        return buildingRepository;
     }
 
     @Override
@@ -91,7 +97,12 @@ public class StoreServiceImpl extends AbstractServiceImpl<Store> implements Stor
     }
 
     @Override
+    public OrderBuilder getOrderBuilder() {
+        return new BuildingOrderBuilder();
+    }
+
+    @Override
     public String getModuleKeyPrefix() {
-        return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_STORE;
+        return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_BUILDING;
     }
 }

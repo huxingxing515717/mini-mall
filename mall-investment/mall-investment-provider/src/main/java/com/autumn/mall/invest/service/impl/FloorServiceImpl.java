@@ -5,7 +5,7 @@
  * 日期: 2020/3/15 14:13
  * 说明:
  */
-package com.autumn.mall.invest.service;
+package com.autumn.mall.invest.service.impl;
 
 import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
@@ -18,6 +18,7 @@ import com.autumn.mall.invest.model.Floor;
 import com.autumn.mall.invest.order.FloorOrderBuilder;
 import com.autumn.mall.invest.repository.FloorRepository;
 import com.autumn.mall.invest.response.InvestResultCode;
+import com.autumn.mall.invest.service.FloorService;
 import com.autumn.mall.invest.specification.FloorSpecificationBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,13 +5,14 @@
  * 日期: 2020/3/15 21:32
  * 说明:
  */
-package com.autumn.mall.basis.service;
+package com.autumn.mall.basis.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.autumn.mall.basis.api.StockInfo;
 import com.autumn.mall.basis.api.WarehouseInfo;
 import com.autumn.mall.basis.model.Stock;
 import com.autumn.mall.basis.repository.StockRepository;
+import com.autumn.mall.basis.service.StockService;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.utils.IdWorker;

@@ -1,11 +1,11 @@
 /**
  * 版权所有 (C), 2019-2020, XXX有限公司
  * 项目名：com.autumn.mall.invest.service
- * 文件名: BizTypeServiceImpl
- * 日期: 2020/3/15 16:25
+ * 文件名: StoreServiceImpl
+ * 日期: 2020/3/14 19:51
  * 说明:
  */
-package com.autumn.mall.invest.service;
+package com.autumn.mall.invest.service.impl;
 
 import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
@@ -13,10 +13,11 @@ import com.autumn.mall.commons.model.UsingState;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
-import com.autumn.mall.invest.model.BizType;
-import com.autumn.mall.invest.repository.BizTypeRepository;
+import com.autumn.mall.invest.model.Store;
+import com.autumn.mall.invest.repository.StoreRepository;
 import com.autumn.mall.invest.response.InvestResultCode;
-import com.autumn.mall.invest.specification.BizTypeSpecificationBuilder;
+import com.autumn.mall.invest.service.StoreService;
+import com.autumn.mall.invest.specification.StoreSpecificationBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,24 +25,24 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * 业态业务层接口实现
+ * 项目业务层接口实现
  *
  * @author Anbang713
- * @create 2020/3/15
+ * @create 2020/3/14
  */
 @Service
-public class BizTypeServiceImpl extends AbstractServiceImpl<BizType> implements BizTypeService {
+public class StoreServiceImpl extends AbstractServiceImpl<Store> implements StoreService {
 
     @Autowired
-    private BizTypeRepository bizTypeRepository;
+    private StoreRepository storeRepository;
     @Autowired
-    private BizTypeSpecificationBuilder specificationBuilder;
+    private StoreSpecificationBuilder specificationBuilder;
 
     @Override
-    protected void doBeforeSave(BizType entity) {
+    protected void doBeforeSave(Store entity) {
         super.doBeforeSave(entity);
-        // 不允许存在代码重复的业态
-        Optional<BizType> optional = bizTypeRepository.findByCode(entity.getCode());
+        // 不允许存在代码重复的项目
+        Optional<Store> optional = storeRepository.findByCode(entity.getCode());
         if (optional.isPresent()) {
             if (entity.getUuid() == null || entity.getUuid().equals(optional.get().getUuid()) == false) {
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_EXISTS);
@@ -53,8 +54,8 @@ public class BizTypeServiceImpl extends AbstractServiceImpl<BizType> implements 
         }
         // 如果是编辑，则代码不允许修改
         if (StringUtils.isNotBlank(entity.getUuid())) {
-            BizType bizType = findById(entity.getUuid());
-            if (bizType.getCode().equals(entity.getCode()) == false) {
+            Store store = findById(entity.getUuid());
+            if (store.getCode().equals(entity.getCode()) == false) {
                 MallExceptionCast.cast(InvestResultCode.CODE_IS_NOT_ALLOW_MODIFY);
             }
         }
@@ -65,24 +66,24 @@ public class BizTypeServiceImpl extends AbstractServiceImpl<BizType> implements 
         if (StringUtils.isBlank(uuid) || targetState == null) {
             MallExceptionCast.cast(CommonsResultCode.INVALID_PARAM);
         }
-        Optional<BizType> optional = getRepository().findById(uuid);
+        Optional<Store> optional = storeRepository.findById(uuid);
         if (optional.isPresent() == false) {
             MallExceptionCast.cast(CommonsResultCode.ENTITY_IS_NOT_EXIST);
         }
-        BizType entity = optional.get();
-        if ((UsingState.using.equals(targetState) && UsingState.using.equals(entity.getState())
-                || (UsingState.disabled.equals(targetState) && UsingState.disabled.equals(entity.getState())))) {
+        Store store = optional.get();
+        if ((UsingState.using.equals(targetState) && UsingState.using.equals(store.getState())
+                || (UsingState.disabled.equals(targetState) && UsingState.disabled.equals(store.getState())))) {
             MallExceptionCast.cast(InvestResultCode.ENTITY_IS_EQUALS_TARGET_STATE);
         }
-        entity.setState(targetState);
-        getRepository().save(entity);
+        store.setState(targetState);
+        storeRepository.save(store);
         saveOperationLog(uuid, UsingState.using.equals(targetState) ? "启用" : "停用");
-        doAfterSave(entity);
+        doAfterSave(store);
     }
 
     @Override
-    public BizTypeRepository getRepository() {
-        return bizTypeRepository;
+    public StoreRepository getRepository() {
+        return storeRepository;
     }
 
     @Override
@@ -92,6 +93,6 @@ public class BizTypeServiceImpl extends AbstractServiceImpl<BizType> implements 
 
     @Override
     public String getModuleKeyPrefix() {
-        return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_BIZTYPE;
+        return MallModuleKeyPrefixes.INVEST_KEY_PREFIX_OF_STORE;
     }
 }

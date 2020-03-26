@@ -5,7 +5,7 @@
  * 日期: 2020/3/17 8:10
  * 说明:
  */
-package com.autumn.mall.product.service;
+package com.autumn.mall.product.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.RandomUtil;

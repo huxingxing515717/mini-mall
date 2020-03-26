@@ -5,7 +5,7 @@
  * 日期: 2020/3/22 15:25
  * 说明:
  */
-package com.autumn.mall.sales.service;
+package com.autumn.mall.sales.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -27,6 +27,7 @@ import com.autumn.mall.sales.model.SalesInputDetail;
 import com.autumn.mall.sales.repository.SalesInputDetailRepository;
 import com.autumn.mall.sales.repository.SalesInputRepository;
 import com.autumn.mall.sales.response.SalesResultCode;
+import com.autumn.mall.sales.service.SalesInputService;
 import com.autumn.mall.sales.specification.SalesInputSpecificationBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,7 +5,7 @@
  * 日期: 2020/3/16 21:20
  * 说明:
  */
-package com.autumn.mall.invest.service;
+package com.autumn.mall.invest.service.impl;
 
 import cn.hutool.core.util.BooleanUtil;
 import com.autumn.mall.commons.model.Order;
@@ -14,6 +14,7 @@ import com.autumn.mall.commons.model.QueryDefinition;
 import com.autumn.mall.commons.response.QueryResult;
 import com.autumn.mall.invest.model.SettleDetail;
 import com.autumn.mall.invest.repository.SettleDetailRepository;
+import com.autumn.mall.invest.service.SettleDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

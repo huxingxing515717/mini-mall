@@ -5,7 +5,7 @@
  * 日期: 2020/3/23 21:24
  * 说明:
  */
-package com.autumn.mall.account.service;
+package com.autumn.mall.account.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -17,6 +17,7 @@ import com.autumn.mall.account.order.StatementOrderBuilder;
 import com.autumn.mall.account.repository.StatementDetailRepository;
 import com.autumn.mall.account.repository.StatementRepository;
 import com.autumn.mall.account.response.AccountResultCode;
+import com.autumn.mall.account.service.StatementService;
 import com.autumn.mall.account.specification.StatementSpecificationBuilder;
 import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
