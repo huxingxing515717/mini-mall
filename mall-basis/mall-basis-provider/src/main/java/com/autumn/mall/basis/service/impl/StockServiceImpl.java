@@ -16,10 +16,12 @@ import com.autumn.mall.basis.service.StockService;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.utils.IdWorker;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
  * @author Anbang713
  * @create 2020/3/15
  */
+@Slf4j
 @Service
 public class StockServiceImpl implements StockService {
 
@@ -40,7 +43,27 @@ public class StockServiceImpl implements StockService {
             entity.setUuid(new IdWorker().nextId());
         }
         stockRepository.save(entity);
-        return false;
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public void inbound(List<Stock> stocks) {
+        if (CollectionUtil.isEmpty(stocks)) {
+            return;
+        }
+        for (Stock stock : stocks) {
+            log.info("实体标识：" + stock.getEntityKey() + "，仓库：" + stock.getWarehouse() + "，增加库存：" + stock.getQuantity());
+            Optional<Stock> optional = stockRepository.findByEntityKeyAndWarehouse(stock.getEntityKey(), stock.getWarehouse());
+            if (optional.isPresent() == false) {
+                save(stock);
+            } else {
+                Stock entity = optional.get();
+                entity.setQuantity(entity.getQuantity().add(stock.getQuantity()));
+                save(entity);
+            }
+        }
+        log.info("本次增加库存成功");
     }
 
     @Override

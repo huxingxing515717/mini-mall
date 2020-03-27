@@ -28,4 +28,6 @@ public interface StockService {
     StockInfo findByEntityKeyAndWarehouse(String entityKey, String warehouse);
 
     Map<String, StockInfo> findByEntityKeys(List<String> entityKeys);
+
+    void inbound(List<Stock> stocks);
 }

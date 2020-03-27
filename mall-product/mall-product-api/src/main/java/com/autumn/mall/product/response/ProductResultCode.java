@@ -28,7 +28,8 @@ public enum ProductResultCode implements ResultCode {
     CODE_IS_NOT_ALLOW_MODIFY(false, "40002", "代码不允许修改！"),
     ENTITY_IS_DISABLED(false, "40003", "已停用状态的资料，不允许修改！"),
     ENTITY_IS_EQUALS_TARGET_STATE(false, "40004", "资料已经是目标状态，禁止重复操作！"),
-    GOODS_DETAILS_IS_EMPTY(false, "40005", "商品明细不允许为空！");
+    GOODS_DETAILS_IS_EMPTY(false, "40005", "商品明细不允许为空！"),
+    GOODS_EFFECT_GLOBAL_TRANSACTIONAL_ERROR(false, "40006", "入库失败，分布式事务回滚！");
 
     private boolean success;
     private String code;

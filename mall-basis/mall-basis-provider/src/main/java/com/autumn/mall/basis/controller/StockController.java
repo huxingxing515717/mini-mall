@@ -9,6 +9,7 @@ package com.autumn.mall.basis.controller;
 
 import com.autumn.mall.basis.api.StockInfo;
 import com.autumn.mall.basis.client.StockApi;
+import com.autumn.mall.basis.model.Stock;
 import com.autumn.mall.basis.service.StockService;
 import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.response.ResponseResult;
@@ -33,6 +34,15 @@ public class StockController implements StockApi {
 
     @Autowired
     private StockService stockService;
+
+    @Override
+    @PostMapping("/inbound")
+    @ApiOperation(value = "入库", httpMethod = "POST")
+    @ApiImplicitParam(name = "stocks", value = "库存", required = true, dataType = "List", paramType = "body")
+    public ResponseResult inbound(@RequestBody List<Stock> stocks) {
+        stockService.inbound(stocks);
+        return new ResponseResult(CommonsResultCode.SUCCESS);
+    }
 
     @Override
     @GetMapping("/{entityKey}")

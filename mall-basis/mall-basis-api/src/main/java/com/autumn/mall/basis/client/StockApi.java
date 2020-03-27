@@ -8,6 +8,7 @@
 package com.autumn.mall.basis.client;
 
 import com.autumn.mall.basis.api.StockInfo;
+import com.autumn.mall.basis.model.Stock;
 import com.autumn.mall.commons.response.ResponseResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,15 @@ import java.util.Map;
  * @create 2020/3/15
  */
 public interface StockApi {
+
+    /**
+     * 商品批量入库
+     *
+     * @param stocks 库存
+     * @return
+     */
+    @PostMapping("/inbound")
+    ResponseResult inbound(@RequestBody List<Stock> stocks);
 
     /**
      * 通过实体标识查询库存信息

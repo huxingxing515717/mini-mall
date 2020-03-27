@@ -9,29 +9,36 @@ package com.autumn.mall.product.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.autumn.mall.basis.client.StockClient;
+import com.autumn.mall.basis.model.Stock;
 import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.BizState;
-import com.autumn.mall.commons.mq.Exchanges;
-import com.autumn.mall.commons.mq.RoutingKeys;
 import com.autumn.mall.commons.repository.BaseRepository;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
+import com.autumn.mall.commons.response.ResponseResult;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
 import com.autumn.mall.commons.utils.IdWorker;
-import com.autumn.mall.commons.utils.RabbitMQUtils;
 import com.autumn.mall.commons.utils.RedisUtils;
 import com.autumn.mall.product.model.GoodsInbound;
 import com.autumn.mall.product.model.GoodsInboundDetail;
 import com.autumn.mall.product.repository.GoodsInboundDetailRepository;
 import com.autumn.mall.product.repository.GoodsInboundRepository;
 import com.autumn.mall.product.response.ProductResultCode;
+import com.autumn.mall.product.service.GoodsInboundService;
 import com.autumn.mall.product.specification.GoodsInboundSpecificationBuilder;
+import io.seata.spring.annotation.GlobalTransactional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,6 +47,7 @@ import java.util.concurrent.TimeUnit;
  * @author Anbang713
  * @create 2020/3/17
  */
+@Slf4j
 @Service
 public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> implements GoodsInboundService {
 
@@ -50,9 +58,9 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
     @Autowired
     private GoodsInboundSpecificationBuilder specificationBuilder;
     @Autowired
-    private RedisUtils redisUtils;
+    private StockClient stockClient;
     @Autowired
-    private RabbitMQUtils rabbitMQUtils;
+    private RedisUtils redisUtils;
 
     @Override
     public List<GoodsInboundDetail> findDetailsByIdOrderByLineNumber(String uuid) {
@@ -60,8 +68,10 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
     }
 
     @Override
+    @Transactional
+    @GlobalTransactional(rollbackFor = Exception.class)
     public void doEffect(String uuid) {
-        // TODO 生效后，商品入库，涉及分布式事务
+        // 获取分布式锁
         try {
             while (redisUtils.tryLock(getLockKeyPrefix() + uuid) == false) {
                 TimeUnit.SECONDS.sleep(3);
@@ -82,15 +92,22 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
         getRepository().save(entity);
         // 商品入库
         List<GoodsInboundDetail> details = goodsInboundDetailRepository.findAllByGoodsInboundUuidOrderByLineNumber(entity.getUuid());
+        List<Stock> stocks = new ArrayList<>();
         details.stream().forEach(detail -> {
-            Map<String, String> msg = new HashMap<>();
-            msg.put("entityKey", MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS + detail.getGoodsUuid());
-            msg.put("warehouse", entity.getWarehouse());
-            msg.put("quantity", detail.getQuantity().toString());
-            rabbitMQUtils.sendMsg(Exchanges.MALL_PRODUCT_PROVIDER_EXCHANGE, RoutingKeys.STOCK_UPDATED, msg);
+            Stock stock = new Stock();
+            stock.setEntityKey(MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS + detail.getGoodsUuid());
+            stock.setWarehouse(entity.getWarehouse());
+            stock.setQuantity(detail.getQuantity());
+            stocks.add(stock);
         });
+        ResponseResult responseResult = stockClient.inbound(stocks);
         // 删除分布式锁
         redisUtils.remove(getLockKeyPrefix() + uuid);
+        // 如果入库失败，需要事务回滚。
+        if (responseResult.isSuccess() == false) {
+            log.info("入库失败，分布式事务回滚。");
+            MallExceptionCast.cast(ProductResultCode.GOODS_EFFECT_GLOBAL_TRANSACTIONAL_ERROR);
+        }
         saveOperationLog(uuid, "生效");
         // 更新缓存，key的过期时间为1天
         redisUtils.set(getModuleKeyPrefix() + entity.getUuid(), entity, RandomUtil.randomLong(3600, 86400));

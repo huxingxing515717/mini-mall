@@ -47,6 +47,7 @@ mini-mall
 |    Redis     | 基于键值对的存储和缓存系统 | https://redis.io/                         |
 |   RabbitMQ   | 消息中间件                 | https://www.rabbitmq.com/                 |
 |   MongoDB    | NoSQL数据库                | https://www.mongodb.com/                  |
+|    seata     | 分布式事务框架             | https://github.com/seata/seata          |
 
 ## 环境搭建
 
@@ -60,6 +61,7 @@ mini-mall
 | RabbitMQ | 3.7.7  | http://www.rabbitmq.com/download.html                        |
 | MongoDB  | 4.0.2  | https://www.mongodb.com/download-center                      |
 |  Redis   | 3.2.1  | https://redis.io/download                                    |
+|  seata   | 1.0.0  | https://github.com/seata/seata/releases/download/v1.0.0/seata-server-1.0.0.zip |
 
 ### 搭建步骤
 
