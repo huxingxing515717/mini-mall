@@ -12,6 +12,7 @@ import com.autumn.mall.basis.api.StockInfo;
 import com.autumn.mall.basis.api.WarehouseInfo;
 import com.autumn.mall.basis.model.Stock;
 import com.autumn.mall.basis.repository.StockRepository;
+import com.autumn.mall.basis.response.BasisResultCode;
 import com.autumn.mall.basis.service.StockService;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.response.CommonsResultCode;
@@ -64,6 +65,36 @@ public class StockServiceImpl implements StockService {
             }
         }
         log.info("本次增加库存成功");
+    }
+
+    @Override
+    @Transactional
+    public void outbound(List<Stock> stocks) {
+        if (CollectionUtil.isEmpty(stocks)) {
+            return;
+        }
+        log.info("准备出库");
+        Map<String, List<Stock>> stockMap = stocks.stream().collect(Collectors.groupingBy(stock -> stock.getEntityKey() + "_" + stock.getWarehouse(), Collectors.toList()));
+        for (String stockKey : stockMap.keySet()) {
+            String[] keys = stockKey.split("_");
+            List<Stock> list = stockMap.get(stockKey);
+            Optional<Stock> optional = stockRepository.findByEntityKeyAndWarehouse(keys[0], keys[1]);
+            if (optional.isPresent() == false) {
+                MallExceptionCast.cast(BasisResultCode.STOCK_IS_NOT_ENOUGH);
+            }
+            BigDecimal outbound = BigDecimal.ZERO;
+            for (Stock stock : list) {
+                outbound = outbound.add(stock.getQuantity());
+            }
+            if (optional.get().getQuantity().compareTo(outbound) < 0) {
+                MallExceptionCast.cast(BasisResultCode.STOCK_IS_NOT_ENOUGH);
+            }
+            Stock stock = optional.get();
+            stock.setQuantity(stock.getQuantity().subtract(outbound));
+            save(stock);
+            log.info("实体标识：" + stock.getEntityKey() + "，仓库：" + stock.getWarehouse() + "，出库成功。");
+        }
+        log.info("本次出库成功");
     }
 
     @Override

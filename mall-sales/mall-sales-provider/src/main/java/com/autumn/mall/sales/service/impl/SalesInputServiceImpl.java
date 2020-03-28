@@ -9,18 +9,19 @@ package com.autumn.mall.sales.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.autumn.mall.basis.client.StockClient;
+import com.autumn.mall.basis.model.Stock;
 import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.BizState;
-import com.autumn.mall.commons.mq.Exchanges;
-import com.autumn.mall.commons.mq.RoutingKeys;
 import com.autumn.mall.commons.repository.BaseRepository;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
+import com.autumn.mall.commons.response.CustomResultCode;
+import com.autumn.mall.commons.response.ResponseResult;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
 import com.autumn.mall.commons.utils.DateRange;
 import com.autumn.mall.commons.utils.IdWorker;
-import com.autumn.mall.commons.utils.RabbitMQUtils;
 import com.autumn.mall.commons.utils.RedisUtils;
 import com.autumn.mall.sales.model.SalesInput;
 import com.autumn.mall.sales.model.SalesInputDetail;
@@ -29,12 +30,18 @@ import com.autumn.mall.sales.repository.SalesInputRepository;
 import com.autumn.mall.sales.response.SalesResultCode;
 import com.autumn.mall.sales.service.SalesInputService;
 import com.autumn.mall.sales.specification.SalesInputSpecificationBuilder;
+import io.seata.spring.annotation.GlobalTransactional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,6 +50,7 @@ import java.util.concurrent.TimeUnit;
  * @author Anbang713
  * @create 2020/3/22
  */
+@Slf4j
 @Service
 public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> implements SalesInputService {
 
@@ -53,9 +61,9 @@ public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> imple
     @Autowired
     private SalesInputSpecificationBuilder specificationBuilder;
     @Autowired
-    private RedisUtils redisUtils;
+    private StockClient stockClient;
     @Autowired
-    private RabbitMQUtils rabbitMQUtils;
+    private RedisUtils redisUtils;
 
     @Override
     public List<SalesInputDetail> findDetailsByUuid(String uuid) {
@@ -82,9 +90,9 @@ public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> imple
     }
 
     @Override
+    @Transactional
+    @GlobalTransactional
     public void doEffect(String uuid) {
-// TODO 生效后，商品出库，涉及分布式事务
-//  （这里还有一个问题就是明细可能存在商品一致、仓库一致、销售数量都没超过库存数量，但是加起来就有可能超过了）
         try {
             while (redisUtils.tryLock(getLockKeyPrefix() + uuid) == false) {
                 TimeUnit.SECONDS.sleep(3);
@@ -105,15 +113,22 @@ public class SalesInputServiceImpl extends AbstractServiceImpl<SalesInput> imple
         getRepository().save(entity);
         // 商品出库
         List<SalesInputDetail> details = salesInputDetailRepository.findAllByInputUuidOrderByLineNumber(entity.getUuid());
+        List<Stock> stocks = new ArrayList<>();
         details.stream().forEach(detail -> {
-            Map<String, String> msg = new HashMap<>();
-            msg.put("entityKey", MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS + detail.getGoodsUuid());
-            msg.put("warehouse", detail.getWarehouse());
-            msg.put("quantity", detail.getQuantity().negate().toString());
-            rabbitMQUtils.sendMsg(Exchanges.MALL_SALES_PROVIDER_EXCHANGE, RoutingKeys.STOCK_UPDATED, msg);
+            Stock stock = new Stock();
+            stock.setEntityKey(MallModuleKeyPrefixes.PRODUCT_KEY_PREFIX_OF_GOODS + detail.getGoodsUuid());
+            stock.setWarehouse(detail.getWarehouse());
+            stock.setQuantity(detail.getQuantity());
+            stocks.add(stock);
         });
+        ResponseResult responseResult = stockClient.outbound(stocks);
         // 删除分布式锁
         redisUtils.remove(getLockKeyPrefix() + uuid);
+        // 如果出库失败，需要事务回滚。
+        if (responseResult.isSuccess() == false) {
+            log.info("出库失败，分布式事务回滚。");
+            MallExceptionCast.cast(new CustomResultCode(responseResult.isSuccess(), responseResult.getCode(), responseResult.getMessage()));
+        }
         saveOperationLog(uuid, "生效");
         // 更新缓存
         redisUtils.set(getModuleKeyPrefix() + entity.getUuid(), entity, RandomUtil.randomLong(3600, 86400));

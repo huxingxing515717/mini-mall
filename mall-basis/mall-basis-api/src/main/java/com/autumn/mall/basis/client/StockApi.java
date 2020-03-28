@@ -22,6 +22,15 @@ import java.util.Map;
 public interface StockApi {
 
     /**
+     * 商品批量出库
+     *
+     * @param stocks 库存
+     * @return
+     */
+    @PostMapping("/outbound")
+    ResponseResult outbound(@RequestBody List<Stock> stocks);
+
+    /**
      * 商品批量入库
      *
      * @param stocks 库存

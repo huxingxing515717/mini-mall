@@ -17,6 +17,7 @@ import com.autumn.mall.commons.model.BizState;
 import com.autumn.mall.commons.repository.BaseRepository;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
 import com.autumn.mall.commons.response.CommonsResultCode;
+import com.autumn.mall.commons.response.CustomResultCode;
 import com.autumn.mall.commons.response.ResponseResult;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
 import com.autumn.mall.commons.utils.IdWorker;
@@ -106,7 +107,7 @@ public class GoodsInboundServiceImpl extends AbstractServiceImpl<GoodsInbound> i
         // 如果入库失败，需要事务回滚。
         if (responseResult.isSuccess() == false) {
             log.info("入库失败，分布式事务回滚。");
-            MallExceptionCast.cast(ProductResultCode.GOODS_EFFECT_GLOBAL_TRANSACTIONAL_ERROR);
+            MallExceptionCast.cast(new CustomResultCode(responseResult.isSuccess(), responseResult.getCode(), responseResult.getMessage()));
         }
         saveOperationLog(uuid, "生效");
         // 更新缓存，key的过期时间为1天

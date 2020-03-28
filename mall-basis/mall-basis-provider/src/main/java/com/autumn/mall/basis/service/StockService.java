@@ -30,4 +30,6 @@ public interface StockService {
     Map<String, StockInfo> findByEntityKeys(List<String> entityKeys);
 
     void inbound(List<Stock> stocks);
+
+    void outbound(List<Stock> stocks);
 }

@@ -45,6 +45,15 @@ public class StockController implements StockApi {
     }
 
     @Override
+    @PostMapping("/outbound")
+    @ApiOperation(value = "出库", httpMethod = "POST")
+    @ApiImplicitParam(name = "stocks", value = "库存", required = true, dataType = "List", paramType = "body")
+    public ResponseResult outbound(List<Stock> stocks) {
+        stockService.outbound(stocks);
+        return new ResponseResult(CommonsResultCode.SUCCESS);
+    }
+
+    @Override
     @GetMapping("/{entityKey}")
     @ApiOperation(value = "根据实体标识查询库存", httpMethod = "GET")
     @ApiImplicitParam(name = "entityKey", value = "实体标识", required = true, dataType = "String", paramType = "path")
