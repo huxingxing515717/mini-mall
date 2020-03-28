@@ -25,3 +25,16 @@ zuul:
       path: /product/**
     mall-stock-provider:
       path: /stock/**
+  host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 30000
+ribbon:
+  ConnectTimeout: 60000
+  ReadTimeout: 60000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000

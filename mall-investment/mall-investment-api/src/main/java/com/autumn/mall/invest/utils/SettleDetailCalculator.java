@@ -55,6 +55,7 @@ public class SettleDetailCalculator {
             detail.setSubjectUuid(contract.getSubjectUuid());
             detail.setTaxRate(contract.getTaxRate());
             detail.setSalesRate(contract.getSalesRate());
+            detail.setStatementUuid(SettleDetail.NONE_STATEMENT);
             details.add(detail);
         }
         return details;
