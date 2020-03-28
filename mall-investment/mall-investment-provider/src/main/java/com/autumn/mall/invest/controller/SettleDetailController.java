@@ -27,6 +27,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.*;
 
@@ -47,6 +48,22 @@ public class SettleDetailController implements SettleDetailApi {
     private TenantService tenantService;
     @Autowired
     private ContractService contractService;
+
+    @Override
+    @ApiIgnore
+    @PostMapping("/settleSuccessful")
+    public ResponseResult writeBackWhenSettleSuccessful(@RequestParam("statementUuid") String statementUuid, @RequestBody List<String> settleDetailUuids) {
+        settleDetailService.writeBackWhenSettleSuccessful(statementUuid, settleDetailUuids);
+        return new ResponseResult(CommonsResultCode.SUCCESS);
+    }
+
+    @Override
+    @ApiIgnore
+    @PostMapping("/statementDeleted")
+    public ResponseResult writeBackWhenStatementDeleted(@RequestParam("statementUuid") String statementUuid) {
+        settleDetailService.writeBackWhenStatementDeleted(statementUuid);
+        return new ResponseResult(CommonsResultCode.SUCCESS);
+    }
 
     @Override
     @GetMapping("/{contractUuid}")

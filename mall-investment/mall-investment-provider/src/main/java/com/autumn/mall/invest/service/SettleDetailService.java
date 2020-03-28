@@ -40,4 +40,19 @@ public interface SettleDetailService {
      * @return
      */
     Boolean existsNoStatement(String contractUuid, Date beginDate);
+
+    /**
+     * 出账成功时回写账单uuid
+     *
+     * @param statementUuid     账单uuid
+     * @param settleDetailUuids 结算明细
+     */
+    void writeBackWhenSettleSuccessful(String statementUuid, List<String> settleDetailUuids);
+
+    /**
+     * 账单删除时，恢复出账
+     *
+     * @param statementUuid 账单uuid
+     */
+    void writeBackWhenStatementDeleted(String statementUuid);
 }

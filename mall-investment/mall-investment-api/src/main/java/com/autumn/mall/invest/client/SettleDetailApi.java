@@ -49,4 +49,23 @@ public interface SettleDetailApi {
      */
     @PostMapping("/query")
     ResponseResult<SummaryQueryResult<SettleDetail>> query(@RequestBody QueryDefinition definition);
+
+    /**
+     * 出账成功时回写账单uuid
+     *
+     * @param statementUuid     账单uuid
+     * @param settleDetailUuids 结算明细
+     * @return
+     */
+    @PostMapping("/settleSuccessful")
+    ResponseResult writeBackWhenSettleSuccessful(@RequestParam("statementUuid") String statementUuid, @RequestBody List<String> settleDetailUuids);
+
+    /**
+     * 账单删除时，恢复出账
+     *
+     * @param statementUuid 账单uuid
+     * @return
+     */
+    @PostMapping("/statementDeleted")
+    ResponseResult writeBackWhenStatementDeleted(@RequestParam("statementUuid") String statementUuid);
 }

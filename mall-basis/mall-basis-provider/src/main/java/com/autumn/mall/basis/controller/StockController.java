@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Map;
@@ -36,18 +37,16 @@ public class StockController implements StockApi {
     private StockService stockService;
 
     @Override
+    @ApiIgnore
     @PostMapping("/inbound")
-    @ApiOperation(value = "入库", httpMethod = "POST")
-    @ApiImplicitParam(name = "stocks", value = "库存", required = true, dataType = "List", paramType = "body")
     public ResponseResult inbound(@RequestBody List<Stock> stocks) {
         stockService.inbound(stocks);
         return new ResponseResult(CommonsResultCode.SUCCESS);
     }
 
     @Override
+    @ApiIgnore
     @PostMapping("/outbound")
-    @ApiOperation(value = "出库", httpMethod = "POST")
-    @ApiImplicitParam(name = "stocks", value = "库存", required = true, dataType = "List", paramType = "body")
     public ResponseResult outbound(List<Stock> stocks) {
         stockService.outbound(stocks);
         return new ResponseResult(CommonsResultCode.SUCCESS);

@@ -7,6 +7,7 @@
  */
 package com.autumn.mall.invest.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.BooleanUtil;
 import com.autumn.mall.commons.model.Order;
 import com.autumn.mall.commons.model.OrderDirection;
@@ -15,6 +16,8 @@ import com.autumn.mall.commons.response.QueryResult;
 import com.autumn.mall.invest.model.SettleDetail;
 import com.autumn.mall.invest.repository.SettleDetailRepository;
 import com.autumn.mall.invest.service.SettleDetailService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +35,7 @@ import java.util.*;
  * @author Anbang713
  * @create 2020/3/16
  */
+@Slf4j
 @Service
 public class SettleDetailServiceImpl implements SettleDetailService {
 
@@ -41,6 +45,34 @@ public class SettleDetailServiceImpl implements SettleDetailService {
     @Override
     public Boolean existsNoStatement(String contractUuid, Date beginDate) {
         return settleDetailRepository.existsByContractUuidAndStatementUuidAndEndDateBefore(contractUuid, SettleDetail.NONE_STATEMENT, beginDate);
+    }
+
+    @Override
+    @Transactional
+    public void writeBackWhenSettleSuccessful(String statementUuid, List<String> settleDetailUuids) {
+        if (StringUtils.isBlank(statementUuid) || CollectionUtil.isEmpty(settleDetailUuids)) {
+            return;
+        }
+        Iterable<SettleDetail> iterable = settleDetailRepository.findAllById(settleDetailUuids);
+        List<SettleDetail> details = new ArrayList<>();
+        iterable.forEach(detail -> {
+            detail.setStatementUuid(statementUuid);
+            details.add(detail);
+        });
+        settleDetailRepository.saveAll(details);
+        log.info("账单uuid回写成功");
+    }
+
+    @Override
+    @Transactional
+    public void writeBackWhenStatementDeleted(String statementUuid) {
+        if (StringUtils.isBlank(statementUuid)) {
+            return;
+        }
+        List<SettleDetail> details = settleDetailRepository.findAllByStatementUuid(statementUuid);
+        details.stream().forEach(detail -> detail.setStatementUuid(SettleDetail.NONE_STATEMENT));
+        settleDetailRepository.saveAll(details);
+        log.info("合同结算明细已经恢复出账");
     }
 
     @Override

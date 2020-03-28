@@ -9,7 +9,6 @@ package com.autumn.mall.account.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.json.JSONUtil;
 import com.autumn.mall.account.commons.PayState;
 import com.autumn.mall.account.model.Statement;
 import com.autumn.mall.account.model.StatementDetail;
@@ -22,8 +21,6 @@ import com.autumn.mall.account.specification.StatementSpecificationBuilder;
 import com.autumn.mall.commons.api.MallModuleKeyPrefixes;
 import com.autumn.mall.commons.exception.MallExceptionCast;
 import com.autumn.mall.commons.model.BizState;
-import com.autumn.mall.commons.mq.Exchanges;
-import com.autumn.mall.commons.mq.RoutingKeys;
 import com.autumn.mall.commons.repository.BaseRepository;
 import com.autumn.mall.commons.repository.OrderBuilder;
 import com.autumn.mall.commons.repository.SpecificationBuilder;
@@ -31,11 +28,11 @@ import com.autumn.mall.commons.response.CommonsResultCode;
 import com.autumn.mall.commons.service.AbstractServiceImpl;
 import com.autumn.mall.commons.utils.DateRange;
 import com.autumn.mall.commons.utils.IdWorker;
-import com.autumn.mall.commons.utils.RabbitMQUtils;
 import com.autumn.mall.commons.utils.RedisUtils;
 import com.autumn.mall.invest.client.SettleDetailClient;
 import com.autumn.mall.invest.model.SettleDetail;
 import com.autumn.mall.sales.client.SalesInputClient;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +65,6 @@ public class StatementServiceImpl extends AbstractServiceImpl<Statement> impleme
     private SettleDetailClient settleDetailClient;
     @Autowired
     private SalesInputClient salesInputClient;
-    @Autowired
-    private RabbitMQUtils rabbitMQUtils;
 
     @Override
     public List<StatementDetail> findDetailsByUuid(String uuid) {
@@ -101,12 +96,12 @@ public class StatementServiceImpl extends AbstractServiceImpl<Statement> impleme
     }
 
     @Override
+    @Transactional
+    @GlobalTransactional
     public void doAfterDeleted(String uuid) {
         statementDetailRepository.deleteByStatementUuid(uuid);
+        settleDetailClient.writeBackWhenStatementDeleted(uuid);
         super.doAfterDeleted(uuid);
-        Map<String, String> params = new HashMap<>();
-        params.put("statementUuid", uuid);
-        rabbitMQUtils.sendMsg(Exchanges.MALL_ACCOUNT_PROVIDER_EXCHANGE, RoutingKeys.STATEMENT_DELETED, params);
     }
 
     @Override
@@ -133,6 +128,7 @@ public class StatementServiceImpl extends AbstractServiceImpl<Statement> impleme
 
     @Override
     @Transactional
+    @GlobalTransactional
     public Map<String, String> settle(List<SettleDetail> settleDetails) {
         Map<String, String> resultMap = new HashMap<>();
         if (CollectionUtil.isEmpty(settleDetails)) {
@@ -181,10 +177,7 @@ public class StatementServiceImpl extends AbstractServiceImpl<Statement> impleme
     private void sendSuccessfulSettleMsg(Statement statement, List<SettleDetail> details) {
         List<String> detailUuids = new ArrayList<>();
         details.stream().forEach(detail -> detailUuids.add(detail.getUuid()));
-        Map<String, String> msg = new HashMap<>();
-        msg.put("statementUuid", statement.getUuid());
-        msg.put("settleDetails", JSONUtil.toJsonStr(detailUuids));
-        rabbitMQUtils.sendMsg(Exchanges.MALL_ACCOUNT_PROVIDER_EXCHANGE, RoutingKeys.SETTLE_SUCCESSFUL, msg);
+        settleDetailClient.writeBackWhenSettleSuccessful(statement.getUuid(), detailUuids);
     }
 
     private Statement generateStatement(List<SettleDetail> details) {
