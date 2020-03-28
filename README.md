@@ -62,13 +62,3 @@ mini-mall
 | MongoDB  | 4.0.2  | https://www.mongodb.com/download-center                      |
 |  Redis   | 3.2.1  | https://redis.io/download                                    |
 |  seata   | 1.0.0  | https://github.com/seata/seata/releases/download/v1.0.0/seata-server-1.0.0.zip |
-
-### 搭建步骤
-
-> windows环境单机版部署
-
-> linux环境单机版部署
-
-> linux环境集群版部署
-
-> docker环境部署
