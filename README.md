@@ -35,6 +35,7 @@ mini-mall
 	├── mall-product-client -- 商品微服务客户端接口组件
 	├── mall-product-provider:9040 -- 商品微服务服务提供者组件
 ├── mall-config-server:9045 -- 基于config的分布式配置中心
+├── zipkin-server:9411 -- zipkin服务
 ```
 
 ## 后端技术选型

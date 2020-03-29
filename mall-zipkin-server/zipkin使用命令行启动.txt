@@ -1,0 +1,1 @@
+java -jar zipkin-server-2.16.2-exec.jar --zipkin.collector.rabbitmq.addresses=localhost --STORAGE_TYPE=mysql --MYSQL_DB=mall_zipkin --MYSQL_HOST=localhost --MYSQL_TCP_PORT=3380 --MYSQL_USER=root --MYSQL_PASS=Anbang713

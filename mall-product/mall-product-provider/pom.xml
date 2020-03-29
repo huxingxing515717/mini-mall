@@ -87,6 +87,15 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
         </dependency>
+        <!--引入sleuth+zipkin实现微服务调用链追踪，binder-rabbit的依赖已在上面引入-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
