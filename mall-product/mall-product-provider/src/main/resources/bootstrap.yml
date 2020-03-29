@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      name: mall-product-provider
+      profile: dev
+      label: dev
+      uri: http://localhost:9045

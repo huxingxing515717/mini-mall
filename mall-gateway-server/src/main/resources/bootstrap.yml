@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      name: mall-gateway-server
+      profile: dev
+      label: dev
+      uri: http://localhost:9045

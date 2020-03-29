@@ -20,6 +20,7 @@
         <module>mall-sales</module>
         <module>mall-account</module>
         <module>mall-product</module>
+        <module>mall-config-server</module>
     </modules>
 
     <parent>

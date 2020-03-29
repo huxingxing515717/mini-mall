@@ -34,6 +34,7 @@ mini-mall
 	├── mall-product-api -- 商品微服务api组件
 	├── mall-product-client -- 商品微服务客户端接口组件
 	├── mall-product-provider:9040 -- 商品微服务服务提供者组件
+├── mall-config-server:9045 -- 基于config的分布式配置中心
 ```
 
 ## 后端技术选型

@@ -1,0 +1,33 @@
+server:
+  port: 9045
+spring:
+  application:
+    name: mall-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Anbang713/config-center.git # 指向git仓库地址，如果是私有仓库，则需要配置用户名和密码
+          search-paths: mini-mall # 指定服务配置所在的目录
+    bus:
+      trace:
+        enabled: true
+      enabled: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+eureka:
+  client:
+    service-url:
+      defaultZone: http://Anbang713:pwd713@localhost:9010/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 10 # 5秒钟发送一次心跳
+    lease-expiration-duration-in-seconds: 30 # 10秒不发送就过期
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh
