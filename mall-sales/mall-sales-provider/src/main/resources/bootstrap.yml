@@ -1,7 +1,8 @@
 spring:
+  profiles:
+    active: dev
   cloud:
     config:
       name: mall-sales-provider
-      profile: dev
-      label: dev
+      label: ${spring.profiles.active}
       uri: http://localhost:9045
