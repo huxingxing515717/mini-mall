@@ -48,7 +48,7 @@ public class OperationLogConsumer {
             key = {RoutingKeys.ENTITY_UPDATED}))
     public void updateEntityLog(Map<String, String> msg) {
         JSONObject jsonObject = JSONUtil.parseFromMap(msg);
-        log.info("接收到来自：" + Exchanges.MALL_COMMONS_EXCHANGE + "的操作日志更新消息，消息体：" + jsonObject.toString());
+        log.info("接收到操作日志更新消息，消息体：{}", jsonObject.toString());
 
         OperationLog operationLog = new OperationLog();
         operationLog.setUuid(new IdWorker().nextId());

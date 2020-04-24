@@ -54,7 +54,7 @@ public class StockServiceImpl implements StockService {
             return;
         }
         for (Stock stock : stocks) {
-            log.info("实体标识：" + stock.getEntityKey() + "，仓库：" + stock.getWarehouse() + "，增加库存：" + stock.getQuantity());
+            log.info("实体标识：{}，仓库：{}，增加库存：{}", stock.getEntityKey(), stock.getWarehouse(), stock.getQuantity());
             Optional<Stock> optional = stockRepository.findByEntityKeyAndWarehouse(stock.getEntityKey(), stock.getWarehouse());
             if (optional.isPresent() == false) {
                 save(stock);
@@ -92,7 +92,7 @@ public class StockServiceImpl implements StockService {
             Stock stock = optional.get();
             stock.setQuantity(stock.getQuantity().subtract(outbound));
             save(stock);
-            log.info("实体标识：" + stock.getEntityKey() + "，仓库：" + stock.getWarehouse() + "，出库成功。");
+            log.info("实体标识：{}，仓库：{}，出库成功。", stock.getEntityKey(), stock.getWarehouse());
         }
         log.info("本次出库成功");
     }
